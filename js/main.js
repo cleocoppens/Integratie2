@@ -5,9 +5,11 @@ import { initCounter } from "./counter.js";
 import { initQuiz } from "./quiz.js";
 import { initConfessions } from "./confessions.js";
 import { initFormValidation } from "./validation.js";
+import { initGalleryUpload } from "./gallery.js";
 
 initCarousels();
 initCounter();
 initQuiz();
-initConfessions();
 initFormValidation();
+await initConfessions();
+await initGalleryUpload();

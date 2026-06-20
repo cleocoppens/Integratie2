@@ -57,15 +57,25 @@
 
       <div class="carousel" data-carousel>
         <ul class="carousel__track gallery__list" data-carousel-track>
-          <li class="gallery__item">
-            <img class="gallery__img" src="assets/img/sfeer-1.jpg" alt="Leeg café-interieur in het vroege ochtendlicht" width="280" height="340" loading="lazy">
+
+          <!-- Upload-knop — altijd eerste item -->
+          <li class="gallery__item gallery__item--upload" data-gallery-upload>
+            <label class="gallery-upload__trigger">
+              <input type="file" data-gallery-input accept="image/jpeg,image/png,image/webp,image/gif" style="display:none">
+              <span class="gallery-upload__icon" aria-hidden="true">+</span>
+              <span data-gallery-label>Voeg jouw foto toe</span>
+            </label>
+            <p class="gallery-upload__error" data-gallery-error hidden></p>
           </li>
-          <li class="gallery__item">
-            <img class="gallery__img" src="assets/img/sfeer-2.jpg" alt="Iemand zet koffie in een stille keuken" width="280" height="340" loading="lazy">
-          </li>
-          <li class="gallery__item">
-            <img class="gallery__img" src="assets/img/sfeer-3.jpg" alt="Persoon lacht achter een laptop bij zonsopgang" width="280" height="340" loading="lazy">
-          </li>
+
+          <!-- 10 lege plaatshouders — worden ingevuld via JS/API -->
+          <li class="gallery__item gallery__item--empty" aria-hidden="true"></li>
+          <li class="gallery__item gallery__item--empty" aria-hidden="true"></li>
+          <li class="gallery__item gallery__item--empty" aria-hidden="true"></li>
+          <li class="gallery__item gallery__item--empty" aria-hidden="true"></li>
+          <li class="gallery__item gallery__item--empty" aria-hidden="true"></li>
+          <li class="gallery__item gallery__item--empty" aria-hidden="true"></li>
+          <li class="gallery__item gallery__item--empty" aria-hidden="true"></li>
           <li class="gallery__item gallery__item--empty" aria-hidden="true"></li>
           <li class="gallery__item gallery__item--empty" aria-hidden="true"></li>
           <li class="gallery__item gallery__item--empty" aria-hidden="true"></li>
