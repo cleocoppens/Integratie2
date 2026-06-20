@@ -547,13 +547,17 @@ em { font-style: normal; }
 .quiz-card__options {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+  grid-auto-rows: 1fr;
   gap: 1rem;
   margin-top: 1.8rem;
 }
-.option { display: block; }
-.option__input { position: absolute; opacity: 0; }
+.option { display: flex; }
+.option__input { position: absolute; opacity: 0; width: 0; height: 0; }
 .option__label {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
   padding: 0.9rem 1.2rem;
   background: var(--teal);
   color: #fff;
@@ -563,9 +567,28 @@ em { font-style: normal; }
   transition: background-color 0.15s ease, transform 0.15s ease;
 }
 .option__label:hover { transform: translateY(-2px); }
-.option__input:checked + .option__label { background: var(--teal-deep); box-shadow: 0 0 0 3px var(--orange); }
-.option__input:focus-visible + .option__label { box-shadow: 0 0 0 3px var(--ink); }
+.option__input:checked + .option__label { background: var(--blue); }
+.option__input:focus-visible + .option__label { outline: none; }
+.quiz-card__progress { text-align: center; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--teal-deep); margin-top: 0.4rem; margin-bottom: 0.6rem; }
+.quiz-card__error { text-align: center; font-size: 0.85rem; font-weight: 600; color: var(--orange); margin-top: 0.8rem; }
 .quiz-card__next { display: block; margin: 1.8rem 0 0 auto; }
+.quiz-card__next[hidden] { display: none; }
+
+/* Resultaat */
+.quiz-card__result { text-align: center; padding: 1rem 0; }
+.quiz-card__result-name { font-size: clamp(2rem, 5vw, 3rem); font-weight: 900; color: var(--orange); line-height: 1.1; margin: 0.4rem 0 0.2rem; }
+.quiz-card__result-label { font-weight: 700; font-size: 1rem; color: var(--teal-deep); margin-bottom: 1rem; }
+.quiz-card__retry { display: inline-block; margin-top: 1.6rem; }
+
+/* Shake */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-6px); }
+  40%       { transform: translateX(6px); }
+  60%       { transform: translateX(-4px); }
+  80%       { transform: translateX(4px); }
+}
+.is-shake { animation: shake 0.4s ease; }
 
 /* REVIEWS */
 .reviews { padding: 3.5rem 0; }

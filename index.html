@@ -224,33 +224,68 @@
       </header>
 
       <form class="quiz-card" action="quiz.php" method="post" data-quiz novalidate>
-        <fieldset class="quiz-card__step" data-quiz-step>
+
+        <!-- Vraag 1 -->
+        <fieldset class="quiz-card__step" data-quiz-step="1">
           <legend class="quiz-card__question">
             Wat doe je als <em>allereerste</em> als je binnenstapt?
           </legend>
-          <p class="quiz-card__hint">Vier vragen, eerlijk antwoorden, één type.</p>
-
+          <p class="quiz-card__progress">Vraag 1 van 4</p>
           <div class="quiz-card__options">
-            <label class="option">
-              <input class="option__input" type="radio" name="q1" value="koffie" required>
-              <span class="option__label">A. Koffie zetten</span>
-            </label>
-            <label class="option">
-              <input class="option__input" type="radio" name="q1" value="plannen">
-              <span class="option__label">B. Mijn dag plannen</span>
-            </label>
-            <label class="option">
-              <input class="option__input" type="radio" name="q1" value="staren">
-              <span class="option__label">C. Even uit het raam staren</span>
-            </label>
-            <label class="option">
-              <input class="option__input" type="radio" name="q1" value="stilte">
-              <span class="option__label">D. Stilte opsnuiven</span>
-            </label>
+            <label class="option"><input class="option__input" type="radio" name="q1" value="G"><span class="option__label">A. Koffie zetten en rustig wakker worden</span></label>
+            <label class="option"><input class="option__input" type="radio" name="q1" value="S"><span class="option__label">B. Mijn takenlijst openen en prioriteiten zetten</span></label>
+            <label class="option"><input class="option__input" type="radio" name="q1" value="D"><span class="option__label">C. Meteen beginnen aan het werk dat blijft liggen</span></label>
+            <label class="option"><input class="option__input" type="radio" name="q1" value="C"><span class="option__label">D. Checken of er al iemand anders aanwezig is</span></label>
           </div>
+          <p class="quiz-card__error" data-quiz-error hidden>Kies eerst een antwoord.</p>
         </fieldset>
 
-        <button class="button button--primary quiz-card__next" type="submit" data-quiz-next>volgende</button>
+        <!-- Vraag 2 -->
+        <fieldset class="quiz-card__step" data-quiz-step="2" hidden>
+          <legend class="quiz-card__question">
+            Waarom kom jij <em>altijd</em> als eerste?
+          </legend>
+          <p class="quiz-card__progress">Vraag 2 van 4</p>
+          <div class="quiz-card__options">
+            <label class="option"><input class="option__input" type="radio" name="q2" value="G"><span class="option__label">A. Ik houd van de rust en de stilte</span></label>
+            <label class="option"><input class="option__input" type="radio" name="q2" value="S"><span class="option__label">B. Dan heb ik alles georganiseerd voor de rest aankomt</span></label>
+            <label class="option"><input class="option__input" type="radio" name="q2" value="D"><span class="option__label">C. Ik krijg zoveel meer gedaan in die eerste uren</span></label>
+            <label class="option"><input class="option__input" type="radio" name="q2" value="C"><span class="option__label">D. Het voelt als een soort thuis voor iedereen er is</span></label>
+          </div>
+          <p class="quiz-card__error" data-quiz-error hidden>Kies eerst een antwoord.</p>
+        </fieldset>
+
+        <!-- Vraag 3 -->
+        <fieldset class="quiz-card__step" data-quiz-step="3" hidden>
+          <legend class="quiz-card__question">
+            Wat stoort jou het meest als er <em>toch</em> al iemand is?
+          </legend>
+          <p class="quiz-card__progress">Vraag 3 van 4</p>
+          <div class="quiz-card__options">
+            <label class="option"><input class="option__input" type="radio" name="q3" value="G"><span class="option__label">A. Ze maken lawaai en verbreken de stilte</span></label>
+            <label class="option"><input class="option__input" type="radio" name="q3" value="S"><span class="option__label">B. Ze respecteren mijn werkruimte niet</span></label>
+            <label class="option"><input class="option__input" type="radio" name="q3" value="D"><span class="option__label">C. Ze leiden me af terwijl ik in mijn flow zit</span></label>
+            <label class="option"><input class="option__input" type="radio" name="q3" value="C"><span class="option__label">D. Niets, ik praat graag met wie er al is</span></label>
+          </div>
+          <p class="quiz-card__error" data-quiz-error hidden>Kies eerst een antwoord.</p>
+        </fieldset>
+
+        <!-- Vraag 4 -->
+        <fieldset class="quiz-card__step" data-quiz-step="4" hidden>
+          <legend class="quiz-card__question">
+            Hoe voel jij je na dat eerste <em>stille</em> uur?
+          </legend>
+          <p class="quiz-card__progress">Vraag 4 van 4</p>
+          <div class="quiz-card__options">
+            <label class="option"><input class="option__input" type="radio" name="q4" value="G"><span class="option__label">A. Ontspannen en helemaal wakker</span></label>
+            <label class="option"><input class="option__input" type="radio" name="q4" value="S"><span class="option__label">B. Klaar, georganiseerd en in controle</span></label>
+            <label class="option"><input class="option__input" type="radio" name="q4" value="D"><span class="option__label">C. Voldaan, want ik heb al heel wat gedaan</span></label>
+            <label class="option"><input class="option__input" type="radio" name="q4" value="C"><span class="option__label">D. Sociaal opgeladen als er al iemand anders is</span></label>
+          </div>
+          <p class="quiz-card__error" data-quiz-error hidden>Kies eerst een antwoord.</p>
+        </fieldset>
+
+        <button class="button button--primary quiz-card__next" type="button" data-quiz-next>Volgende</button>
       </form>
     </section>
 
