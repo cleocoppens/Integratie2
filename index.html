@@ -297,31 +297,47 @@
       </header>
 
       <div class="carousel" data-carousel>
-        <ul class="carousel__track reviews__track" data-carousel-track>
-          <li class="review">
-            <p class="review__stars"><span role="img" aria-label="5 op 5 sterren">&#9733;&#9733;&#9733;&#9733;&#9733;</span></p>
-            <blockquote class="review__quote">
-              Ik dacht altijd dat vroeg opstaan zinloos was. Nu is het het beste deel van mijn dag.
-              First In heeft me laten zien dat ik helemaal niet de enige vroege vogel ben op kantoor!
-            </blockquote>
-            <cite class="review__author">Lena V., Brussel</cite>
+        <ul class="carousel__track reviews__track" data-carousel-track data-reviews-track>
+
+          <!-- Review-formulier — altijd eerste item -->
+          <li class="review review--form">
+            <form class="review-form" action="api/add-review.php" method="post" novalidate data-review-form>
+              <div class="review-form__stars" role="group" aria-label="Beoordeling">
+                <button class="review-form__star" type="button" data-star="1" aria-label="1 ster">&#9733;</button>
+                <button class="review-form__star" type="button" data-star="2" aria-label="2 sterren">&#9733;</button>
+                <button class="review-form__star" type="button" data-star="3" aria-label="3 sterren">&#9733;</button>
+                <button class="review-form__star" type="button" data-star="4" aria-label="4 sterren">&#9733;</button>
+                <button class="review-form__star" type="button" data-star="5" aria-label="5 sterren">&#9733;</button>
+              </div>
+              <input type="hidden" name="stars" value="0" data-stars-value>
+
+              <textarea class="review-form__text" name="quote" placeholder="Schrijf jouw review&hellip;" maxlength="150" required></textarea>
+              <p class="review-form__count"><span data-review-char-count>0</span>/150</p>
+
+              <div class="review-form__meta">
+                <div class="review-form__city">
+                  <select class="review-form__location" name="location" required>
+                    <option value="">Stad&hellip;</option>
+                    <option>Gent</option>
+                    <option>Brussel</option>
+                    <option>Antwerpen</option>
+                    <option>Leuven</option>
+                    <option>Brugge</option>
+                  </select>
+                  <span class="review-form__city-arrow" aria-hidden="true">&#8964;</span>
+                </div>
+                <label class="review-form__anon-label">
+                  <input class="review-form__anon-checkbox" type="checkbox" name="anonymous" data-anon-toggle>
+                  <span class="review-form__anon-toggle" aria-hidden="true"></span>
+                  <span>Anoniem</span>
+                </label>
+              </div>
+              <input class="review-form__author" type="text" name="author" placeholder="Jouw naam&hellip;" maxlength="50" data-author-field>
+
+              <button class="button button--primary review-form__submit" type="submit" disabled>Plaatsen</button>
+            </form>
           </li>
-          <li class="review">
-            <p class="review__stars"><span role="img" aria-label="4 op 5 sterren">&#9733;&#9733;&#9733;&#9733;&#9734;</span></p>
-            <blockquote class="review__quote">
-              Eindelijk een reden om de snooze-knop te negeren. Via First In heb ik mensen leren kennen
-              die ik anders nooit had gesproken. Het koppelsysteem werkt verrassend goed.
-            </blockquote>
-            <cite class="review__author">Thomas D., Gent</cite>
-          </li>
-          <li class="review">
-            <p class="review__stars"><span role="img" aria-label="2 op 5 sterren">&#9733;&#9733;&#9734;&#9734;&#9734;</span></p>
-            <blockquote class="review__quote">
-              Ik was sceptisch over die vroege uurtjes op kantoor, maar het werd al snel een van mijn
-              favoriete momenten — vooral door de mensen die je leert kennen.
-            </blockquote>
-            <cite class="review__author">Sara M., Leuven</cite>
-          </li>
+
         </ul>
 
         <div class="carousel__controls" data-carousel-controls hidden>

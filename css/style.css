@@ -600,10 +600,63 @@ em { font-style: normal; }
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  aspect-ratio: 1 / 1;
+  overflow-y: auto;
+  scrollbar-width: none;
 }
-.review__stars { color: var(--orange); font-size: 1.4rem; letter-spacing: 0.1em; }
-.review__quote { font-size: 0.95rem; line-height: 1.5; }
-.review__author { font-style: normal; font-weight: 700; font-size: 0.85rem; margin-top: auto; }
+.review::-webkit-scrollbar { display: none; }
+.review__stars { color: var(--orange); font-size: 1.4rem; letter-spacing: 0.1em; flex-shrink: 0; }
+.review__quote { font-size: 0.95rem; line-height: 1.5; overflow-wrap: break-word; word-break: break-word; }
+.review__author { font-style: normal; font-weight: 700; font-size: 0.85rem; margin-top: auto; flex-shrink: 0; }
+
+/* Review formulier kaart */
+.review--form { background: var(--paper-soft); color: var(--ink); border: 2px dashed var(--teal); overflow-y: auto; scrollbar-width: none; }
+.review--form::-webkit-scrollbar { display: none; }
+.review-form { display: flex; flex-direction: column; gap: 0.65rem; height: 100%; }
+
+.review-form__stars { display: flex; gap: 0.1rem; }
+.review-form__star {
+  background: none; border: none; font-size: 1.8rem; line-height: 1;
+  color: color-mix(in srgb, var(--ink) 25%, transparent); cursor: pointer; padding: 0 0.05rem;
+  transition: color 0.1s;
+}
+.review-form__star.is-active,
+.review-form__star.is-hover { color: var(--orange); }
+
+.review-form__text {
+  flex: 1; resize: none; border: 1.5px solid color-mix(in srgb, var(--ink) 30%, transparent);
+  border-radius: 8px; padding: 0.6rem; font: inherit; font-size: 0.9rem;
+  background: #fff; min-height: 70px;
+}
+.review-form__text:focus { outline: none; border-color: var(--teal); }
+.review-form__count { font-size: 0.72rem; color: color-mix(in srgb, var(--ink) 40%, transparent); text-align: right; margin-top: -0.3rem; }
+.review-form__count.is-near-limit { color: var(--orange); }
+
+.review-form__meta { display: flex; align-items: center; gap: 0.5rem; flex-wrap: nowrap; }
+.review-form__city { display: flex; align-items: center; gap: 0.15rem; border-right: 1.5px solid color-mix(in srgb, var(--ink) 25%, transparent); padding-right: 0.5rem; flex-shrink: 0; flex: 1; min-width: 0; }
+.review-form__location { appearance: none; -webkit-appearance: none; border: none; background: transparent; font: inherit; font-size: 0.85rem; cursor: pointer; outline: none; min-width: 0; flex: 1; }
+.review-form__city-arrow { font-size: 1rem; line-height: 1; pointer-events: none; flex-shrink: 0; }
+.review-form__author { width: 100%; border: none; border-bottom: 1.5px solid color-mix(in srgb, var(--ink) 30%, transparent); background: transparent; font: inherit; font-size: 0.85rem; padding: 0.15rem 0; outline: none; }
+.review-form__author:focus { border-color: var(--teal); }
+
+.review-form__anon-label { display: flex; align-items: center; gap: 0.35rem; font-size: 0.8rem; cursor: pointer; flex-shrink: 0; user-select: none; white-space: nowrap; }
+.review-form__anon-checkbox { position: absolute; opacity: 0; width: 0; height: 0; }
+.review-form__anon-toggle {
+  display: inline-block; width: 2.2rem; height: 1.2rem; border-radius: 999px;
+  background: color-mix(in srgb, var(--ink) 25%, transparent);
+  position: relative; transition: background 0.2s; flex-shrink: 0;
+}
+.review-form__anon-toggle::after {
+  content: ''; position: absolute; left: 2px; top: 2px;
+  width: calc(1.2rem - 4px); height: calc(1.2rem - 4px);
+  border-radius: 50%; background: #fff; transition: transform 0.2s;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+.review-form__anon-checkbox:checked + .review-form__anon-toggle { background: var(--teal); }
+.review-form__anon-checkbox:checked + .review-form__anon-toggle::after { transform: translateX(1rem); }
+
+.review-form__submit { align-self: flex-end; margin-top: auto; }
+.review-form__submit[disabled] { opacity: 0.35; cursor: not-allowed; transform: none; }
 
 /* CONTACT */
 .contact { padding: 3.5rem 0 4rem; }
