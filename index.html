@@ -182,40 +182,34 @@
           <span class="deco deco--books" aria-hidden="true"></span>
         </header>
 
-        <div class="feed">
-          <ul class="feed__list" data-feed>
-            <li class="confession">
-              <span class="confession__meta">7u41 &middot; Gent</span>
-              <p class="confession__text">Ik heb al drie keer dezelfde mok afgewassen voor iemand anders hem kon pakken.</p>
-              <button class="confession__recognise" type="button"><span aria-hidden="true">&check;</span> <span data-recognise-count>203</span></button>
-            </li>
-            <li class="confession">
-              <span class="confession__meta">6u58 &middot; Antwerpen</span>
-              <p class="confession__text">Ik geniet stiekem van de lift helemaal voor mezelf alleen.</p>
-              <button class="confession__recognise" type="button"><span aria-hidden="true">&check;</span> <span data-recognise-count>187</span></button>
-            </li>
-            <li class="confession">
-              <span class="confession__meta">7u12 &middot; Leuven</span>
-              <p class="confession__text">De printer aanzetten voelt elke ochtend als een klein ritueel.</p>
-              <button class="confession__recognise" type="button"><span aria-hidden="true">&check;</span> <span data-recognise-count>164</span></button>
-            </li>
-            <li class="confession">
-              <span class="confession__meta">7u03 &middot; Brussel</span>
-              <p class="confession__text">Ik weet exact welke trede kraakt en vermijd hem uit gewoonte.</p>
-              <button class="confession__recognise" type="button"><span aria-hidden="true">&check;</span> <span data-recognise-count>142</span></button>
-            </li>
-            <li class="confession">
-              <span class="confession__meta">6u47 &middot; Brugge</span>
-              <p class="confession__text">Het eerste licht aandoen voelt alsof het kantoor van mij is.</p>
-              <button class="confession__recognise" type="button"><span aria-hidden="true">&check;</span> <span data-recognise-count>129</span></button>
-            </li>
-          </ul>
+        <div class="feed" data-feed-container>
+          <ul class="feed__list" data-feed></ul>
+
+          <div class="feed__controls" data-feed-controls hidden>
+            <button class="carousel__button" type="button" data-feed-prev aria-label="Vorige confessionals">&uarr;</button>
+            <button class="carousel__button" type="button" data-feed-next aria-label="Volgende confessionals">&darr;</button>
+          </div>
 
           <form class="confession-form" action="confession.php" method="post" novalidate>
-            <label class="visually-hidden" for="confession-input">Jouw ochtendmoment</label>
-            <input class="confession-form__input" type="text" id="confession-input" name="moment"
-                   placeholder="Jouw ochtendmoment&hellip;" maxlength="160" required>
-            <button class="button button--primary" type="submit">Versturen</button>
+            <div class="confession-form__field">
+              <div class="confession-form__city">
+                <label class="visually-hidden" for="confession-location">Stad</label>
+                <select class="confession-form__location" id="confession-location" name="location" required>
+                  <option value="">Stad&hellip;</option>
+                  <option>Gent</option>
+                  <option>Brussel</option>
+                  <option>Antwerpen</option>
+                  <option>Leuven</option>
+                  <option>Brugge</option>
+                </select>
+                <span class="confession-form__city-arrow" aria-hidden="true">&#8964;</span>
+              </div>
+              <label class="visually-hidden" for="confession-input">Jouw ochtendmoment</label>
+              <input class="confession-form__input" type="text" id="confession-input" name="moment"
+                     placeholder="Jouw ochtendmoment&hellip;" maxlength="100" required>
+              <span class="confession-form__count" data-confession-count aria-live="polite">0/100</span>
+            </div>
+            <button class="button button--primary" type="submit" disabled>Versturen</button>
           </form>
         </div>
       </div>

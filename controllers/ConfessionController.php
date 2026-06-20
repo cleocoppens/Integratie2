@@ -5,7 +5,7 @@ require_once __DIR__ . '/../models/Confession.php';
 
 class ConfessionController
 {
-    private const MAX_LENGTH = 160;
+    private const MAX_LENGTH = 100;
 
     public function submit(): void
     {

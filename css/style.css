@@ -178,6 +178,7 @@ em { font-style: normal; }
 
 .button--primary { background: var(--teal); color: #fff; }
 .button--primary:hover { background: var(--teal-deep); }
+.button--primary:disabled { background: var(--teal); opacity: 0.35; cursor: not-allowed; transform: none; }
 
 .button--ghost { background: transparent; color: var(--teal-deep); }
 .button--ghost:hover { background: rgba(0, 176, 149, 0.12); }
@@ -431,18 +432,29 @@ em { font-style: normal; }
   border-radius: var(--radius-lg);
   padding: 0.6rem;
   max-height: 360px;
-  overflow-y: auto;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  display: grid;
+  grid-template-columns: max-content 1fr auto;
+}
+.feed__list::-webkit-scrollbar { display: none; }
+.feed__controls {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.8rem;
 }
 .confession {
   display: grid;
-  grid-template-columns: 96px 1fr auto;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
   gap: 1rem;
   align-items: center;
   padding: 1rem;
   border-bottom: 1px solid var(--paper-soft);
 }
 .confession:last-child { border-bottom: 0; }
-.confession__meta { font-weight: 700; font-size: 0.8rem; color: var(--teal-deep); }
+.confession__meta { font-weight: 700; font-size: 0.8rem; color: var(--teal-deep); white-space: nowrap; }
 .confession__text { font-size: 0.9rem; }
 .confession__recognise {
   display: inline-flex;
@@ -463,34 +475,56 @@ em { font-style: normal; }
   border-radius: 999px;
   padding: 0.4rem 0.4rem 0.4rem 1.2rem;
 }
-.confession-form__location {
-  width: 8rem;
-  border: none;
-  border-right: 1px solid color-mix(in srgb, currentColor 20%, transparent);
-  background: transparent;
-  font: inherit;
-  padding-right: 0.6rem;
-  flex-shrink: 0;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23333'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 0.4rem center;
-  background-size: 0.6rem;
-  padding-right: 1.4rem;
-  cursor: pointer;
-  outline: none;
+.confession-form__field {
+  flex: 1;
+  display: flex;
+  align-items: center;
 }
-.confession-form__location:focus-visible,
-.confession-form__location:focus { outline: none; box-shadow: none; }
 .confession-form__input {
   flex: 1;
   border: 0;
   background: transparent;
+  background-color: transparent;
   font: inherit;
 }
-.confession-form__input:focus-visible { outline: none; }
+.confession-form__input:focus,
+.confession-form__input:focus-visible { outline: none; background-color: transparent; }
+.confession-form__input:-webkit-autofill,
+.confession-form__input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px var(--paper) inset;
+  box-shadow: 0 0 0 1000px var(--paper) inset;
+}
+.confession-form__city {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  border-right: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+  padding-right: 0.8rem;
+  flex-shrink: 0;
+}
+.confession-form__location {
+  appearance: none;
+  -webkit-appearance: none;
+  border: none;
+  background: transparent;
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  outline: none;
+}
+.confession-form__city-arrow {
+  font-size: 1.1rem;
+  line-height: 1;
+  pointer-events: none;
+  color: var(--ink);
+}
+.confession-form__count {
+  font-size: 0.75rem;
+  color: color-mix(in srgb, currentColor 40%, transparent);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.confession-form__count.is-near-limit { color: var(--orange); }
 
 /* QUIZ */
 .quiz { padding: 3.5rem 0; }
