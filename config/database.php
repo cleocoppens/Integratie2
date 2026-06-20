@@ -1,21 +1,17 @@
 <?php
 
-require_once __DIR__ . '/../vendor/autoload.php';
-
-use Illuminate\Database\Capsule\Manager as Capsule;
-
-$capsule = new Capsule;
-
-$capsule->addConnection([
-    'driver'    => 'mysql',
-    'host'      => 'mysql',
-    'database'  => 'first_in',
-    'username'  => 'root',
-    'password'  => 'devine4life',
-    'charset'   => 'utf8mb4',
-    'collation' => 'utf8mb4_unicode_ci',
-    'prefix'    => '',
-]);
-
-$capsule->setAsGlobal();
-$capsule->bootEloquent();
+function db(): PDO {
+    static $pdo = null;
+    if ($pdo === null) {
+        $pdo = new PDO(
+            'mysql:host=mysql;dbname=first_in;charset=utf8mb4',
+            'root',
+            'devine4life',
+            [
+                PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            ]
+        );
+    }
+    return $pdo;
+}

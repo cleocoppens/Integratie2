@@ -1,7 +1,6 @@
 <?php
 
 require_once __DIR__ . '/../config/database.php';
-require_once __DIR__ . '/../models/Confession.php';
 
 class ConfessionController
 {
@@ -23,11 +22,11 @@ class ConfessionController
         }
 
         try {
-            Confession::create([
-                'location' => $location,
-                'content'  => $content,
-            ]);
-        } catch (\Exception $e) {
+            $stmt = db()->prepare(
+                'INSERT INTO confessions (location, content) VALUES (?, ?)'
+            );
+            $stmt->execute([$location, $content]);
+        } catch (Exception $e) {
             $this->redirect('index.php#confessions');
         }
 
@@ -37,12 +36,8 @@ class ConfessionController
     private function validate(string $content, string $location): array
     {
         $errors = [];
-        if ($location === '') {
-            $errors[] = 'Stad is verplicht.';
-        }
-        if ($content === '') {
-            $errors[] = 'Jouw ochtendmoment is verplicht.';
-        }
+        if ($location === '') $errors[] = 'Stad is verplicht.';
+        if ($content === '')  $errors[] = 'Jouw ochtendmoment is verplicht.';
         if (mb_strlen($content) > self::MAX_LENGTH) {
             $errors[] = 'Jouw ochtendmoment mag maximaal ' . self::MAX_LENGTH . ' tekens bevatten.';
         }

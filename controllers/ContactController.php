@@ -1,7 +1,6 @@
 <?php
 
 require_once __DIR__ . '/../config/database.php';
-require_once __DIR__ . '/../models/Question.php';
 
 class ContactController
 {
@@ -29,13 +28,11 @@ class ContactController
         }
 
         try {
-            Question::create([
-                'name'     => $name,
-                'phone'    => $phone,
-                'email'    => $email,
-                'question' => $question,
-            ]);
-        } catch (\Exception $e) {
+            $stmt = db()->prepare(
+                'INSERT INTO questions (name, phone, email, question) VALUES (?, ?, ?, ?)'
+            );
+            $stmt->execute([$name, $phone, $email, $question]);
+        } catch (Exception $e) {
             http_response_code(500);
             $this->redirect('index.html#contact');
         }
@@ -46,7 +43,6 @@ class ContactController
     private function validate(string $name, string $phone, string $email, string $question): array
     {
         $errors = [];
-
         if ($name === '')     $errors[] = 'Naam is verplicht.';
         if ($phone === '')    $errors[] = 'Telefoonnummer is verplicht.';
         if ($email === '')    $errors[] = 'E-mailadres is verplicht.';
@@ -61,7 +57,6 @@ class ContactController
         if (mb_strlen($question) > self::QUESTION_MAX_LEN) {
             $errors[] = 'Jouw vraag mag maximaal ' . self::QUESTION_MAX_LEN . ' karakters bevatten.';
         }
-
         return $errors;
     }
 

@@ -7,7 +7,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 require_once __DIR__ . '/../config/database.php';
-require_once __DIR__ . '/../models/Review.php';
 
 $stars     = (int)   ($_POST['stars']     ?? 0);
 $quote     = trim(   $_POST['quote']      ?? '');
@@ -25,13 +24,17 @@ if (!$anonymous && mb_strlen($author) < 1) {
 }
 
 try {
-    $review = Review::create([
-        'author'    => $anonymous ? '' : $author,
-        'location'  => $location,
-        'stars'     => $stars,
-        'quote'     => $quote,
-        'anonymous' => $anonymous ? 1 : 0,
+    $stmt = db()->prepare(
+        'INSERT INTO reviews (author, location, stars, quote, anonymous) VALUES (?, ?, ?, ?, ?)'
+    );
+    $stmt->execute([
+        $anonymous ? '' : $author,
+        $location,
+        $stars,
+        $quote,
+        $anonymous ? 1 : 0,
     ]);
+
     echo json_encode([
         'success'  => true,
         'author'   => $anonymous ? 'Anoniem' : $author,
@@ -39,6 +42,6 @@ try {
         'stars'    => $stars,
         'quote'    => $quote,
     ]);
-} catch (\Exception $e) {
+} catch (Exception $e) {
     echo json_encode(['success' => false, 'error' => 'Er ging iets mis.']);
 }

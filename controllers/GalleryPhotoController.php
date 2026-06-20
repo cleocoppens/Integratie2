@@ -1,7 +1,6 @@
 <?php
 
 require_once __DIR__ . '/../config/database.php';
-require_once __DIR__ . '/../models/GalleryPhoto.php';
 
 class GalleryPhotoController
 {
@@ -22,7 +21,6 @@ class GalleryPhotoController
         if (!$file || $file['error'] !== UPLOAD_ERR_OK) {
             $this->json(['success' => false, 'error' => 'upload']);
         }
-
         if ($file['size'] > self::MAX_BYTES) {
             $this->json(['success' => false, 'error' => 'toobig']);
         }
@@ -41,11 +39,10 @@ class GalleryPhotoController
         }
 
         $alt = trim($_POST['alt'] ?? '');
-        if ($alt === '') {
-            $alt = 'Sfeerbeeld geüpload door een gebruiker';
-        }
+        if ($alt === '') $alt = 'Sfeerbeeld geüpload door een gebruiker';
 
-        GalleryPhoto::create(['filename' => $filename, 'alt' => $alt]);
+        $stmt = db()->prepare('INSERT INTO gallery_photos (filename, alt) VALUES (?, ?)');
+        $stmt->execute([$filename, $alt]);
 
         $this->json(['success' => true, 'filename' => $filename, 'alt' => $alt]);
     }

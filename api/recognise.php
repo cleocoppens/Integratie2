@@ -7,7 +7,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 require_once __DIR__ . '/../config/database.php';
-require_once __DIR__ . '/../models/Confession.php';
 
 $id    = (int) ($_POST['id']    ?? 0);
 $delta = (int) ($_POST['delta'] ?? 0);
@@ -18,14 +17,21 @@ if ($id <= 0 || !in_array($delta, [-1, 1], true)) {
 }
 
 try {
-    $confession = Confession::find($id);
-    if (!$confession) {
+    $pdo  = db();
+    $stmt = $pdo->prepare('SELECT recognition_count FROM confessions WHERE id = ?');
+    $stmt->execute([$id]);
+    $row = $stmt->fetch();
+
+    if (!$row) {
         echo json_encode(['success' => false]);
         exit;
     }
-    $confession->recognition_count = max(0, $confession->recognition_count + $delta);
-    $confession->save();
-    echo json_encode(['success' => true, 'count' => $confession->recognition_count]);
-} catch (\Exception $e) {
+
+    $newCount = max(0, (int) $row['recognition_count'] + $delta);
+    $pdo->prepare('UPDATE confessions SET recognition_count = ? WHERE id = ?')
+        ->execute([$newCount, $id]);
+
+    echo json_encode(['success' => true, 'count' => $newCount]);
+} catch (Exception $e) {
     echo json_encode(['success' => false]);
 }

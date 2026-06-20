@@ -2,14 +2,16 @@
 header('Content-Type: application/json');
 
 require_once __DIR__ . '/../config/database.php';
-require_once __DIR__ . '/../models/GalleryPhoto.php';
 
 try {
-    $photos = GalleryPhoto::orderBy('created_at', 'desc')->limit(10)->get();
-    echo json_encode($photos->map(fn($p) => [
-        'filename' => $p->filename,
-        'alt'      => $p->alt,
-    ])->values());
-} catch (\Exception $e) {
+    $rows = db()->query(
+        'SELECT filename, alt FROM gallery_photos ORDER BY created_at DESC LIMIT 10'
+    )->fetchAll();
+
+    echo json_encode(array_map(fn($p) => [
+        'filename' => $p['filename'],
+        'alt'      => $p['alt'],
+    ], $rows));
+} catch (Exception $e) {
     echo json_encode([]);
 }
