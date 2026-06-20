@@ -407,14 +407,15 @@ em { font-style: normal; }
   padding: 1.6rem 1.6rem 2rem;
   display: flex;
   flex-direction: column;
+  aspect-ratio: 1 / 1;
 }
 .step-card__number {
-  font-size: 4rem;
+  font-size: 6rem;
   font-weight: 900;
   color: var(--blue);
   line-height: 1;
 }
-.step-card__title { font-size: 1.6rem; margin-top: 2.5rem; }
+.step-card__title { font-size: 1.6rem; margin-top: 2rem; margin-bottom: 1rem; color: var(--blue); }
 .step-card__text { margin-top: 0.7rem; font-size: 0.9rem; opacity: 0.92; }
 
 /* OCHTEND-CONFESSIONAL */
