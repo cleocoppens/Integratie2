@@ -355,33 +355,41 @@
         <span class="deco deco--scanner" aria-hidden="true"></span>
       </header>
 
-      <form class="contact-form" action="contact.php" method="post" novalidate>
+      <div class="contact-success" hidden>
+        <p class="contact-success__icon" aria-hidden="true">✔</p>
+        <p class="contact-success__title">Bericht verstuurd!</p>
+        <p class="contact-success__sub">We nemen zo snel mogelijk contact met je op.</p>
+        <button class="button button--primary contact-success__retry" type="button">Nog een vraag stellen</button>
+      </div>
+
+      <form class="contact-form" action="api/contact.php" method="post" novalidate>
         <div class="field">
-          <label class="field__label" for="name">Naam:</label>
-          <input class="field__input" type="text" id="name" name="name" autocomplete="name" required>
+          <label class="visually-hidden" for="name">Naam</label>
+          <input class="field__input" type="text" id="name" name="name" placeholder="Naam" autocomplete="name" required>
           <p class="field__error" data-error-for="name" hidden></p>
         </div>
 
         <div class="field">
-          <label class="field__label" for="phone">Telefoonnummer:</label>
-          <input class="field__input" type="tel" id="phone" name="phone" autocomplete="tel"
-                 inputmode="tel" pattern="[0-9+\s()/-]{8,20}" required>
+          <label class="visually-hidden" for="phone">Telefoonnummer</label>
+          <input class="field__input" type="tel" id="phone" name="phone" placeholder="Telefoonnummer"
+                 autocomplete="tel" inputmode="tel" pattern="[0-9+\s()/-]{8,20}" required>
           <p class="field__error" data-error-for="phone" hidden></p>
         </div>
 
         <div class="field">
-          <label class="field__label" for="email">E-mailadres:</label>
-          <input class="field__input" type="email" id="email" name="email" autocomplete="email" required>
+          <label class="visually-hidden" for="email">E-mailadres</label>
+          <input class="field__input" type="email" id="email" name="email" placeholder="E-mailadres" autocomplete="email" required>
           <p class="field__error" data-error-for="email" hidden></p>
         </div>
 
         <div class="field">
-          <label class="field__label" for="question">Jouw vraag:</label>
-          <textarea class="field__input field__input--area" id="question" name="question" rows="4" required></textarea>
+          <label class="visually-hidden" for="question">Jouw vraag</label>
+          <textarea class="field__input field__input--area" id="question" name="question" placeholder="Jouw vraag&hellip;" rows="4" maxlength="200" required></textarea>
           <p class="field__error" data-error-for="question" hidden></p>
+          <p class="field__count"><span data-contact-char-count>0</span>/200</p>
         </div>
 
-        <button class="button button--primary contact-form__submit" type="submit">Versturen</button>
+        <button class="button button--primary contact-form__submit" type="submit" disabled>Versturen</button>
       </form>
     </section>
 

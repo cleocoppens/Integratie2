@@ -260,6 +260,8 @@ em { font-style: normal; }
   font-size: 0.85rem;
   font-weight: 600;
 }
+.field__count { font-size: 0.72rem; color: color-mix(in srgb, var(--ink) 40%, transparent); text-align: right; margin-top: -0.3rem; }
+.field__count.is-near-limit { color: var(--orange); }
 
 /* -------------------------------- 6. SECTIES ----------------------------- */
 
@@ -668,7 +670,40 @@ em { font-style: normal; }
   padding: 2.2rem clamp(1.5rem, 5vw, 3rem);
 }
 .contact-form .field__label { color: var(--orange); }
+.contact-form .field__input {
+  background: var(--paper);
+  border: none;
+  border-radius: 999px;
+  padding: 0.75rem 1.4rem;
+}
+.contact-form .field__input--area {
+  border-radius: 1.4rem;
+  resize: none;
+}
+.contact-form .field__input:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--teal); }
+.contact-form .field__input[aria-invalid="true"] { box-shadow: 0 0 0 2px var(--orange); background: #fff4f0; }
+.contact-form .field__count { color: var(--ink); }
+.contact-form .field__count.is-near-limit { color: var(--orange); }
 .contact-form__submit { display: block; margin-left: auto; }
+.contact-form__submit[disabled] { opacity: 0.35; cursor: not-allowed; transform: none; }
+
+.contact-success {
+  max-width: 760px; margin: 2rem auto 0;
+  background: var(--yellow); border-radius: var(--radius-lg);
+  padding: 3rem clamp(1.5rem, 5vw, 3rem);
+  text-align: center;
+}
+.contact-success[hidden] { display: none; }
+.contact-success__icon {
+  font-size: 3rem; line-height: 1;
+  color: var(--teal); margin: 0 0 0.75rem;
+}
+.contact-success__title {
+  font-size: 1.5rem; font-weight: 800;
+  color: var(--ink); margin: 0 0 0.4rem;
+}
+.contact-success__sub { color: var(--ink); margin: 0 0 1.5rem; }
+.contact-success__retry { margin: 0 auto; }
 
 /* FOOTER */
 .site-footer { padding: 2.5rem 6vw; text-align: center; }

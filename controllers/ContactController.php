@@ -1,18 +1,19 @@
 <?php
 
 require_once __DIR__ . '/../config/database.php';
-require_once __DIR__ . '/../models/Contact.php';
+require_once __DIR__ . '/../models/Question.php';
 
 class ContactController
 {
-    private const EMAIL_PATTERN = '/^[^\s@]+@[^\s@]+\.[^\s@]+$/';
-    private const PHONE_PATTERN = '/^[0-9+\s()\/\-]{8,20}$/';
+    private const EMAIL_PATTERN    = '/^[^\s@]+@[^\s@]+\.[^\s@]+$/';
+    private const PHONE_PATTERN    = '/^[0-9+\s()\/\-]{8,20}$/';
+    private const QUESTION_MAX_LEN = 200;
 
     public function submit(): void
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             http_response_code(405);
-            $this->redirect('index.php');
+            $this->redirect('index.html');
         }
 
         $name     = trim($_POST['name']     ?? '');
@@ -24,11 +25,11 @@ class ContactController
 
         if (!empty($errors)) {
             http_response_code(422);
-            $this->redirect('index.php#contact');
+            $this->redirect('index.html#contact');
         }
 
         try {
-            Contact::create([
+            Question::create([
                 'name'     => $name,
                 'phone'    => $phone,
                 'email'    => $email,
@@ -36,10 +37,10 @@ class ContactController
             ]);
         } catch (\Exception $e) {
             http_response_code(500);
-            $this->redirect('index.php#contact');
+            $this->redirect('index.html#contact');
         }
 
-        $this->redirect('index.php?contact=success#contact');
+        $this->redirect('index.html?contact=success#contact');
     }
 
     private function validate(string $name, string $phone, string $email, string $question): array
@@ -56,6 +57,9 @@ class ContactController
         }
         if ($email !== '' && !preg_match(self::EMAIL_PATTERN, $email)) {
             $errors[] = 'Vul een geldig e-mailadres in.';
+        }
+        if (mb_strlen($question) > self::QUESTION_MAX_LEN) {
+            $errors[] = 'Jouw vraag mag maximaal ' . self::QUESTION_MAX_LEN . ' karakters bevatten.';
         }
 
         return $errors;
