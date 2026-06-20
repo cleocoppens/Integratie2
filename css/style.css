@@ -186,6 +186,7 @@ em { font-style: normal; }
 .tag {
   display: inline-flex;
   align-items: center;
+  gap: 0.5rem;
   padding: 0.3rem 0.75rem;
   background: var(--teal);
   color: #fff;
@@ -363,15 +364,11 @@ em { font-style: normal; }
 .live { padding: 3rem 0; background: var(--yellow); }
 .live__inner { position: relative; }
 .live__grid {
-  display: grid;
-  grid-template-columns: minmax(140px, 0.5fr) 1fr;
-  gap: 2rem;
-  align-items: center;
   max-width: var(--maxw);
   margin: 2rem auto 0;
   padding: 0 6vw;
 }
-.counter { display: flex; flex-direction: column; }
+.counter { display: flex; flex-direction: column; margin-bottom: 1rem; }
 .counter__value {
   font-size: clamp(3.5rem, 10vw, 6rem);
   font-weight: 900;
@@ -387,10 +384,15 @@ em { font-style: normal; }
   margin-top: 0.3rem;
 }
 .live-card {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
   background: var(--paper);
   border-radius: var(--radius-lg);
   padding: 1.6rem 1.8rem;
 }
+.live-card .counter { margin-bottom: 0; flex-shrink: 0; padding-right: 2rem; border-right: 2px solid var(--yellow-deep); }
+.live-card__body { flex: 1; }
 .live-card__title { font-size: 1.3rem; color: var(--ink); }
 .live-card__title em { font-family: var(--font-accent); font-style: italic; font-weight: 400; color: var(--orange); }
 .live-card__text { margin-top: 0.5rem; font-size: 0.95rem; }
