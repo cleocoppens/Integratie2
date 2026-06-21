@@ -1,7 +1,7 @@
 const MESSAGES = {
-  required: "Dit veld is verplicht.",
-  email:    "Vul een geldig e-mailadres in.",
-  phone:    "Vul een geldig telefoonnummer in.",
+  required:  "Dit veld is verplicht.",
+  email:     "Vul een geldig e-mailadres in.",
+  phone:     "Vul een geldig telefoonnummer in.",
   maxlength: (max) => `Maximaal ${max} karakters toegestaan.`,
 };
 
@@ -18,33 +18,32 @@ export function initFormValidation() {
 
 function setupFormValidation(form) {
   setupSubmitToggle(form);
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+  form.addEventListener("submit", handleContactSubmit);
+}
 
-    const inputs = Array.from(form.querySelectorAll(".field__input"));
-    let firstInvalid = null;
-    for (const input of inputs) {
-      const error = validateInput(input);
-      if (error === "") { clearError(input); }
-      else { showError(input, error); if (!firstInvalid) firstInvalid = input; }
-    }
-    if (firstInvalid) { firstInvalid.focus(); return; }
+async function handleContactSubmit(e) {
+  e.preventDefault();
+  const form   = e.currentTarget;
+  const inputs = Array.from(form.querySelectorAll(".field__input"));
+  let firstInvalid = null;
 
-    const btn = form.querySelector("[type='submit']");
-    btn.disabled = true;
+  for (const input of inputs) {
+    const error = validateInput(input);
+    if (error === "") { clearError(input); }
+    else { showError(input, error); if (!firstInvalid) firstInvalid = input; }
+  }
+  if (firstInvalid) { firstInvalid.focus(); return; }
 
-    try {
-      const res  = await fetch("api/contact.php", { method: "POST", body: new FormData(form) });
-      const json = await res.json();
-      if (json.success) {
-        showContactSuccess();
-      } else {
-        btn.disabled = false;
-      }
-    } catch {
-      btn.disabled = false;
-    }
-  });
+  const btn = form.querySelector("[type='submit']");
+  btn.disabled = true;
+
+  try {
+    const res  = await fetch("api/contact.php", { method: "POST", body: new FormData(form) });
+    const json = await res.json();
+    if (json.success) { showContactSuccess(); } else { btn.disabled = false; }
+  } catch {
+    btn.disabled = false;
+  }
 }
 
 function setupSubmitToggle(form) {
@@ -52,22 +51,22 @@ function setupSubmitToggle(form) {
   const inputs = Array.from(form.querySelectorAll(".field__input"));
   if (!btn) return;
 
-  function checkReady() {
-    btn.disabled = !inputs.every(inp => inp.value.trim() !== "");
-  }
-
   inputs.forEach(inp => {
-    inp.addEventListener("input",  () => { clearError(inp); checkReady(); });
-    inp.addEventListener("change", () => { clearError(inp); checkReady(); });
+    inp.addEventListener("input",  () => { clearError(inp); checkContactReady(btn, inputs); });
+    inp.addEventListener("change", () => { clearError(inp); checkContactReady(btn, inputs); });
     inp.addEventListener("blur",   () => {
       if (inp.value.trim() !== "") {
         const err = validateInput(inp);
         if (err) showError(inp, err); else clearError(inp);
       }
-      checkReady();
+      checkContactReady(btn, inputs);
     });
   });
-  checkReady();
+  checkContactReady(btn, inputs);
+}
+
+function checkContactReady(btn, inputs) {
+  btn.disabled = !inputs.every(inp => inp.value.trim() !== "");
 }
 
 function showContactSuccess() {
@@ -91,14 +90,14 @@ function setupCharCount(form) {
   const span = form.querySelector("[data-contact-char-count]");
   const wrap = span?.closest(".field__count");
 
-  function update() {
-    const len = textarea.value.length;
-    if (span) span.textContent = len;
-    if (wrap) wrap.classList.toggle("is-near-limit", len >= max - 10);
-  }
+  textarea.addEventListener("input", () => updateCharCount(textarea, span, wrap, max));
+  updateCharCount(textarea, span, wrap, max);
+}
 
-  textarea.addEventListener("input", update);
-  update();
+function updateCharCount(textarea, span, wrap, max) {
+  const len = textarea.value.length;
+  if (span) span.textContent = len;
+  if (wrap) wrap.classList.toggle("is-near-limit", len >= max - 10);
 }
 
 function validateInput(input) {

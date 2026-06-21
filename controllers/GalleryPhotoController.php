@@ -1,12 +1,26 @@
 <?php
 
-require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../models/GalleryPhoto.php';
 
 class GalleryPhotoController
 {
     private const MAX_BYTES    = 10 * 1024 * 1024;
     private const ALLOWED_MIME = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
     private const UPLOAD_DIR   = __DIR__ . '/../assets/img/uploads/';
+
+    public function index(): void
+    {
+        header('Content-Type: application/json');
+        try {
+            $rows = GalleryPhoto::getLatest(10);
+            echo json_encode(array_map(fn($p) => [
+                'filename' => $p['filename'],
+                'alt'      => $p['alt'],
+            ], $rows));
+        } catch (Exception $e) {
+            echo json_encode([]);
+        }
+    }
 
     public function upload(): void
     {
@@ -41,8 +55,7 @@ class GalleryPhotoController
         $alt = trim($_POST['alt'] ?? '');
         if ($alt === '') $alt = 'Sfeerbeeld geüpload door een gebruiker';
 
-        $stmt = db()->prepare('INSERT INTO gallery_photos (filename, alt) VALUES (?, ?)');
-        $stmt->execute([$filename, $alt]);
+        GalleryPhoto::create($filename, $alt);
 
         $this->json(['success' => true, 'filename' => $filename, 'alt' => $alt]);
     }

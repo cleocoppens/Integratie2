@@ -301,7 +301,7 @@
 
           <!-- Review-formulier — altijd eerste item -->
           <li class="review review--form">
-            <form class="review-form" action="api/add-review.php" method="post" novalidate data-review-form>
+            <form class="review-form" action="review.php" method="post" novalidate data-review-form>
               <div class="review-form__stars" role="group" aria-label="Beoordeling">
                 <button class="review-form__star" type="button" data-star="1" aria-label="1 ster">&#9733;</button>
                 <button class="review-form__star" type="button" data-star="2" aria-label="2 sterren">&#9733;</button>
@@ -362,7 +362,7 @@
         <button class="button button--primary contact-success__retry" type="button">Nog een vraag stellen</button>
       </div>
 
-      <form class="contact-form" action="api/contact.php" method="post" novalidate>
+      <form class="contact-form" action="contact.php" method="post" novalidate>
         <div class="field">
           <label class="visually-hidden" for="name">Naam</label>
           <input class="field__input" type="text" id="name" name="name" placeholder="Naam" autocomplete="name" required>

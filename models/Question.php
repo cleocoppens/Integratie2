@@ -1,9 +1,17 @@
 <?php
 
-use Illuminate\Database\Eloquent\Model;
+require_once __DIR__ . '/../config/database.php';
 
-class Question extends Model
+class Question
 {
-    protected $table    = 'questions';
-    protected $fillable = ['name', 'phone', 'email', 'question'];
+    public static function create(
+        string $name,
+        string $phone,
+        string $email,
+        string $question
+    ): void {
+        db()->prepare(
+            'INSERT INTO questions (name, phone, email, question) VALUES (?, ?, ?, ?)'
+        )->execute([$name, $phone, $email, $question]);
+    }
 }

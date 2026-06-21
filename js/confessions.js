@@ -1,6 +1,3 @@
-// confessions.js — twee dingen: het "herken ik"-vinkje en het toevoegen
-// van een nieuw moment. Zonder JS post het formulier naar confession.php.
-
 export async function initConfessions() {
   await loadFromAPI();
   initRecogniseButtons();
@@ -17,7 +14,6 @@ async function loadFromAPI() {
     const confessions = await res.json();
     if (!Array.isArray(confessions) || confessions.length === 0) return;
 
-    // Omgekeerd prependen zodat nieuwste bovenaan staat
     [...confessions].reverse().forEach(c => {
       list.prepend(buildConfessionFromData(c.meta, c.text, c.recognition_count, c.id));
     });
@@ -41,6 +37,22 @@ function buildConfessionFromData(meta, text, count, id) {
   return item;
 }
 
+function feedStepSize(list) {
+  const first = list.querySelector(".confession");
+  if (!first) return 80;
+  const gap = Number.parseFloat(getComputedStyle(list).rowGap) || 0;
+  return first.getBoundingClientRect().height + gap;
+}
+
+function refreshFeedControls(list, controls, prev, next) {
+  const overflow = list.scrollHeight - list.clientHeight;
+  controls.hidden = overflow <= 1;
+  prev.disabled = list.scrollTop <= 0;
+  prev.setAttribute("aria-disabled", String(list.scrollTop <= 0));
+  next.disabled = list.scrollTop >= overflow - 1;
+  next.setAttribute("aria-disabled", String(list.scrollTop >= overflow - 1));
+}
+
 function initFeedControls() {
   const list     = document.querySelector("[data-feed]");
   const controls = document.querySelector("[data-feed-controls]");
@@ -48,31 +60,14 @@ function initFeedControls() {
   const next     = document.querySelector("[data-feed-next]");
   if (!list || !controls || !prev || !next) return;
 
-  function stepSize() {
-    const first = list.querySelector(".confession");
-    if (!first) return 80;
-    const gap = Number.parseFloat(getComputedStyle(list).rowGap) || 0;
-    return first.getBoundingClientRect().height + gap;
-  }
-
-  function refresh() {
-    const overflow = list.scrollHeight - list.clientHeight;
-    controls.hidden = overflow <= 1;
-    prev.disabled = list.scrollTop <= 0;
-    prev.setAttribute("aria-disabled", String(list.scrollTop <= 0));
-    next.disabled = list.scrollTop >= overflow - 1;
-    next.setAttribute("aria-disabled", String(list.scrollTop >= overflow - 1));
-  }
-
-  prev.addEventListener("click", () => { list.scrollBy({ top: -stepSize(), behavior: "smooth" }); });
-  next.addEventListener("click", () => { list.scrollBy({ top:  stepSize(), behavior: "smooth" }); });
-  list.addEventListener("scroll", refresh);
-  refresh();
+  prev.addEventListener("click", () => { list.scrollBy({ top: -feedStepSize(list), behavior: "smooth" }); });
+  next.addEventListener("click", () => { list.scrollBy({ top:  feedStepSize(list), behavior: "smooth" }); });
+  list.addEventListener("scroll", () => refreshFeedControls(list, controls, prev, next));
+  refreshFeedControls(list, controls, prev, next);
 }
 
 function initRecogniseButtons() {
-  const buttons = document.querySelectorAll(".confession__recognise");
-  buttons.forEach(setupRecogniseButton);
+  document.querySelectorAll(".confession__recognise").forEach(setupRecogniseButton);
 }
 
 function setupRecogniseButton(button) {
@@ -106,6 +101,15 @@ async function saveRecognise(id, delta) {
   }
 }
 
+function checkConfessionReady(button, input, locInput, counter, MAX) {
+  const len = input.value.length;
+  if (counter) {
+    counter.textContent = `${len}/${MAX}`;
+    counter.classList.toggle("is-near-limit", len >= MAX - 10);
+  }
+  button.disabled = input.value.trim() === "" || locInput.value === "";
+}
+
 function initConfessionForm() {
   const form     = document.querySelector(".confession-form");
   if (!form) return;
@@ -121,17 +125,8 @@ function initConfessionForm() {
     try { locInput.showPicker(); } catch { locInput.focus(); }
   });
 
-  function checkReady() {
-    const len = input.value.length;
-    if (counter) {
-      counter.textContent = `${len}/${MAX}`;
-      counter.classList.toggle("is-near-limit", len >= MAX - 10);
-    }
-    button.disabled = input.value.trim() === "" || locInput.value === "";
-  }
-
-  input.addEventListener("input", checkReady);
-  locInput.addEventListener("change", checkReady);
+  input.addEventListener("input",   () => checkConfessionReady(button, input, locInput, counter, MAX));
+  locInput.addEventListener("change", () => checkConfessionReady(button, input, locInput, counter, MAX));
 
   form.addEventListener("submit", handleConfessionSubmit);
 }
@@ -167,7 +162,7 @@ function buildConfession(text, location) {
   const item = document.createElement("li");
   item.className = "confession";
   item.innerHTML =
-    `<span class="confession__meta">${formatNow()} &middot; </span>` +
+    `<span class="confession__meta"></span>` +
     `<p class="confession__text"></p>` +
     `<button class="confession__recognise" type="button">` +
     `<span aria-hidden="true">&check;</span> <span data-recognise-count>0</span></button>`;

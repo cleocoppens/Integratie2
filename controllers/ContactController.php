@@ -1,12 +1,47 @@
 <?php
 
-require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../models/Question.php';
 
 class ContactController
 {
     private const EMAIL_PATTERN    = '/^[^\s@]+@[^\s@]+\.[^\s@]+$/';
     private const PHONE_PATTERN    = '/^[0-9+\s()\/\-]{8,20}$/';
     private const QUESTION_MAX_LEN = 200;
+
+    public function ajax(): void
+    {
+        header('Content-Type: application/json');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            exit;
+        }
+
+        $name     = trim($_POST['name']     ?? '');
+        $phone    = trim($_POST['phone']    ?? '');
+        $email    = trim($_POST['email']    ?? '');
+        $question = trim($_POST['question'] ?? '');
+
+        if ($name === '' || $phone === '' || $email === '' || $question === '') {
+            echo json_encode(['success' => false, 'error' => 'Vul alle velden in.']);
+            exit;
+        }
+        if (!preg_match(self::EMAIL_PATTERN, $email)) {
+            echo json_encode(['success' => false, 'error' => 'Vul een geldig e-mailadres in.']);
+            exit;
+        }
+        if (!preg_match(self::PHONE_PATTERN, $phone)) {
+            echo json_encode(['success' => false, 'error' => 'Vul een geldig telefoonnummer in.']);
+            exit;
+        }
+
+        try {
+            Question::create($name, $phone, $email, $question);
+            echo json_encode(['success' => true]);
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'error' => 'Er ging iets mis, probeer opnieuw.']);
+        }
+    }
 
     public function submit(): void
     {
@@ -28,10 +63,7 @@ class ContactController
         }
 
         try {
-            $stmt = db()->prepare(
-                'INSERT INTO questions (name, phone, email, question) VALUES (?, ?, ?, ?)'
-            );
-            $stmt->execute([$name, $phone, $email, $question]);
+            Question::create($name, $phone, $email, $question);
         } catch (Exception $e) {
             http_response_code(500);
             $this->redirect('index.html#contact');

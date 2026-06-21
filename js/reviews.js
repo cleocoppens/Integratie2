@@ -10,7 +10,8 @@ export async function initReviews() {
 
 async function loadFromAPI(track) {
   try {
-    const reviews = await fetch("api/reviews.php").then(r => r.json());
+    const res     = await fetch("api/reviews.php");
+    const reviews = await res.json();
     if (!Array.isArray(reviews) || reviews.length === 0) return;
     const formItem = track.querySelector(".review--form");
     [...reviews].reverse().forEach(r => {
@@ -37,6 +38,15 @@ function buildStarHTML(count) {
   return Array.from({ length: 5 }, (_, i) => (i < count ? "★" : "☆")).join("");
 }
 
+function checkReviewReady(submitBtn, selectedStars, textarea, locationSel, anonToggle, authorInput) {
+  submitBtn.disabled = !(
+    selectedStars > 0 &&
+    textarea.value.trim().length > 0 &&
+    locationSel.value !== "" &&
+    (anonToggle.checked || authorInput.value.trim().length > 0)
+  );
+}
+
 function initReviewForm(track) {
   const form = track.querySelector("[data-review-form]");
   if (!form) return;
@@ -52,7 +62,6 @@ function initReviewForm(track) {
   const submitBtn   = form.querySelector(".review-form__submit");
   let selectedStars = 0;
 
-  // Sterren
   starsGroup.querySelectorAll("[data-star]").forEach(btn => {
     const n = Number(btn.dataset.star);
     btn.addEventListener("mouseenter", () => highlightStars(starsGroup, n, true));
@@ -61,20 +70,18 @@ function initReviewForm(track) {
       selectedStars = n;
       starsInput.value = n;
       highlightStars(starsGroup, n, false);
-      checkReady();
+      checkReviewReady(submitBtn, selectedStars, textarea, locationSel, anonToggle, authorInput);
     });
   });
 
-  // Stad-pijltje opent dropdown
   cityArrow?.addEventListener("click", () => {
     try { locationSel.showPicker(); } catch { locationSel.focus(); }
   });
 
-  // Anoniem toggle
   anonToggle.addEventListener("change", () => {
     authorInput.hidden   = anonToggle.checked;
     authorInput.disabled = anonToggle.checked;
-    checkReady();
+    checkReviewReady(submitBtn, selectedStars, textarea, locationSel, anonToggle, authorInput);
   });
 
   const MAX_CHARS = Number(textarea.maxLength) || 150;
@@ -82,24 +89,15 @@ function initReviewForm(track) {
     const len = textarea.value.length;
     charCount.textContent = String(len);
     charCount.closest(".review-form__count").classList.toggle("is-near-limit", len >= MAX_CHARS - 10);
-    checkReady();
+    checkReviewReady(submitBtn, selectedStars, textarea, locationSel, anonToggle, authorInput);
   });
-  locationSel.addEventListener("change", checkReady);
-  authorInput.addEventListener("input", checkReady);
-
-  function checkReady() {
-    submitBtn.disabled = !(
-      selectedStars > 0 &&
-      textarea.value.trim().length > 0 &&
-      locationSel.value !== "" &&
-      (anonToggle.checked || authorInput.value.trim().length > 0)
-    );
-  }
+  locationSel.addEventListener("change", () => checkReviewReady(submitBtn, selectedStars, textarea, locationSel, anonToggle, authorInput));
+  authorInput.addEventListener("input",  () => checkReviewReady(submitBtn, selectedStars, textarea, locationSel, anonToggle, authorInput));
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     try {
-      const res  = await fetch(form.action, { method: "POST", body: new FormData(form) });
+      const res  = await fetch("api/add-review.php", { method: "POST", body: new FormData(form) });
       const json = await res.json();
       if (!json.success) return;
       prependReview(track, json);

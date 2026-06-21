@@ -15,8 +15,8 @@ export async function initGalleryUpload() {
     const file = fileInput.files[0];
     if (!file) return;
 
-    hideError();
-    setLabel("Uploaden…");
+    hideGalleryError(errorEl);
+    setGalleryLabel(label, "Uploaden…");
 
     const formData = new FormData();
     formData.append("photo", file);
@@ -29,28 +29,28 @@ export async function initGalleryUpload() {
         prependPhoto(uploadItem, data.filename, data.alt);
         enforceLimit(track);
       } else {
-        showError(friendlyError(data.error));
+        showGalleryError(errorEl, friendlyError(data.error));
       }
     } catch {
-      showError("Upload mislukt. Probeer opnieuw.");
+      showGalleryError(errorEl, "Upload mislukt. Probeer opnieuw.");
     } finally {
-      setLabel("Voeg jouw foto toe");
+      setGalleryLabel(label, "Voeg jouw foto toe");
       fileInput.value = "";
     }
   });
+}
 
-  function setLabel(text) {
-    label.textContent = text;
-  }
+function setGalleryLabel(label, text) {
+  label.textContent = text;
+}
 
-  function showError(msg) {
-    errorEl.textContent = msg;
-    errorEl.hidden = false;
-  }
+function showGalleryError(errorEl, msg) {
+  errorEl.textContent = msg;
+  errorEl.hidden = false;
+}
 
-  function hideError() {
-    errorEl.hidden = true;
-  }
+function hideGalleryError(errorEl) {
+  errorEl.hidden = true;
 }
 
 async function loadFromAPI() {
@@ -63,10 +63,8 @@ async function loadFromAPI() {
     const photos = await res.json();
     if (!Array.isArray(photos) || photos.length === 0) return;
 
-    // Omgekeerd invoegen zodat nieuwste rechts van de uploadknop staat
     [...photos].reverse().forEach(p => prependPhoto(uploadItem, p.filename, p.alt));
 
-    // Evenveel placeholders verwijderen als foto's geladen
     const placeholders = Array.from(track.querySelectorAll(".gallery__item--empty"));
     placeholders.slice(-photos.length).forEach(p => p.remove());
   } catch {
@@ -75,7 +73,7 @@ async function loadFromAPI() {
 }
 
 function prependPhoto(uploadItem, filename, alt) {
-  const li = document.createElement("li");
+  const li  = document.createElement("li");
   li.className = "gallery__item";
   const img = document.createElement("img");
   img.className = "gallery__img";
@@ -97,9 +95,7 @@ function enforceLimit(track) {
   const photos = track.querySelectorAll(
     ".gallery__item:not(.gallery__item--upload):not(.gallery__item--empty)"
   );
-  if (photos.length > MAX_VISIBLE) {
-    photos[photos.length - 1].remove();
-  }
+  if (photos.length > MAX_VISIBLE) photos[photos.length - 1].remove();
 }
 
 function friendlyError(code) {
