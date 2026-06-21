@@ -25,14 +25,14 @@ async function loadFromAPI() {
     if (!Array.isArray(confessions) || confessions.length === 0) return;
 
     [...confessions].reverse().forEach(c => {
-      list.prepend(buildConfessionFromData(c.meta, c.text, c.recognition_count, c.id));
+      list.prepend(buildConfessionItem(c.text, c.meta, c.recognition_count, c.id));
     });
   } catch {
     // stil falen — fallback in HTML blijft zichtbaar
   }
 }
 
-function buildConfessionFromData(meta, text, count, id) {
+function buildConfessionItem(text, meta, count, id) {
   const item = document.createElement("li");
   item.className = "confession";
   if (id) item.dataset.confessionId = id;
@@ -167,7 +167,7 @@ function handleConfessionSubmit(event) {
   event.preventDefault();
   const list = document.querySelector("[data-feed]");
   if (!list) return;
-  list.prepend(buildConfession(text, location));
+  list.prepend(buildConfessionItem(text, `${formatNow()} · ${location}`, 0, null));
   saveConfession(form.action, text, location);
   form.reset();
   input.focus();
@@ -182,20 +182,6 @@ async function saveConfession(url, text, location) {
   } catch {
     // stil falen — bericht staat al in de DOM
   }
-}
-
-function buildConfession(text, location) {
-  const item = document.createElement("li");
-  item.className = "confession";
-  item.innerHTML =
-    `<span class="confession__meta"></span>` +
-    `<p class="confession__text"></p>` +
-    `<button class="confession__recognise" type="button">` +
-    `<span aria-hidden="true">&check;</span> <span data-recognise-count>0</span></button>`;
-  item.querySelector(".confession__meta").textContent = `${formatNow()} · ${location}`;
-  item.querySelector(".confession__text").textContent = text;
-  item.querySelector(".confession__recognise").addEventListener("click", onRecogniseClick);
-  return item;
 }
 
 function formatNow() {
