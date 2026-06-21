@@ -128,11 +128,11 @@ em { font-style: normal; }
   border-radius: 6px;
 }
 .section-head__title em.accent--multi {
-  background: linear-gradient(90deg, var(--orange), var(--teal) 55%, var(--blue));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  padding: 0;
+  background: var(--yellow);
+  -webkit-background-clip: unset;
+  background-clip: unset;
+  color: var(--teal);
+  padding: 0 0.12em;
 }
 
 .section-head__text {
@@ -156,9 +156,10 @@ em { font-style: normal; }
 .section-head--on-dark .section-head__title { color: var(--ink); }
 .section-head--on-dark .section-head__title em { color: var(--teal-deep); }
 
-.mark--aqua  { background: var(--aqua); padding: 0 0.18em; border-radius: 6px; }
+.mark--aqua  { background: var(--teal); padding: 0 0.18em; border-radius: 6px; }
 .mark--red   { background: var(--teal); padding: 0 0.18em; border-radius: 6px; }
 .section-head__title .mark--red em { background: transparent; color: var(--blue); }
+.mark__accent--blue { font-family: var(--font-accent); font-style: italic; font-weight: 400; color: var(--blue) !important; background: transparent !important; padding: 0 !important; }
 .accent--multi {
   font-family: var(--font-accent);
   font-style: italic;
@@ -225,8 +226,10 @@ em { font-style: normal; }
 .deco--flowers { width: 120px; height: 150px; top: 4rem;   right: 22vw; background-image: url("../assets/img/deco/flowers.png"); }
 .deco--markers { width: 220px; height: 90px;  bottom: 0;   right: 6vw;  background-image: url("../assets/img/deco/markers.png"); }
 .deco--clock   { width: 110px; height: 110px; top: -0.5rem; right: 22vw; background-image: url("../assets/img/deco/clock.png"); }
+.deco--pot     { width: 240px; height: 320px; bottom: -4rem; right: 30vw; top: auto; z-index: 10; background-image: url("../assets/img/deco/pot.png"); }
 .deco--books   { width: 150px; height: 110px; top: -2rem;  right: 6vw;  background-image: url("../assets/img/deco/books.png"); }
 .deco--markers-2{ width: 220px; height: 90px; top: -3rem;  right: 18vw; background-image: url("../assets/img/deco/markers.png"); }
+.deco--stiftjes { width: 300px; height: 225px; top: -4.5rem; right: 14vw; background-image: url("../assets/img/deco/stiftjes.png"); }
 .deco--scanner { width: 150px; height: 120px; top: -3rem;  right: 18vw; background-image: url("../assets/img/deco/scanner.png"); }
 
 /* carousel (progressive enhancement: zonder JS gewoon scrollbaar) */
@@ -573,7 +576,7 @@ body.lamp-on .hero__mark--yellow { background: var(--yellow); }
   color: var(--orange);
   text-align: center;
 }
-.quiz-card__question em { font-family: var(--font-accent); font-style: italic; font-weight: 400; background: var(--aqua); padding: 0 0.12em; border-radius: 6px; }
+.quiz-card__question em { font-family: var(--font-accent); font-style: italic; font-weight: 400; background: var(--teal); color: var(--blue); padding: 0 0.12em; border-radius: 6px; }
 .quiz-card__hint { text-align: center; font-size: 0.85rem; margin-top: 0.3rem; }
 .quiz-card__options {
   display: grid;
