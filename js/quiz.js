@@ -25,31 +25,43 @@ export function initQuiz() {
   const form = document.querySelector("[data-quiz]");
   if (!form) return;
 
-  const steps  = Array.from(form.querySelectorAll("[data-quiz-step]"));
-  const btn    = form.querySelector("[data-quiz-next]");
-  let current  = 0;
+  const steps = Array.from(form.querySelectorAll("[data-quiz-step]"));
+  const btn   = form.querySelector("[data-quiz-next]");
 
-  btn.disabled = true;
-  setupStepListeners(steps[current], btn, current);
+  startQuiz(form, steps, btn);
+}
 
-  btn.addEventListener("click", () => {
+function startQuiz(form, steps, btn) {
+  let current = 0;
+
+  steps.forEach((s, i) => { s.hidden = i !== 0; });
+  steps.forEach(s => s.querySelectorAll("input[type=radio]").forEach(r => { r.checked = false; }));
+
+  btn.hidden    = false;
+  btn.disabled  = true;
+  btn.textContent = "Volgende vraag";
+  setupStepListeners(steps[0], btn, 0);
+
+  const onNext = () => {
     const step = steps[current];
-    const name = `q${current + 1}`;
-    const picked = step.querySelector(`input[name="${name}"]:checked`);
+    const picked = step.querySelector(`input[name="q${current + 1}"]:checked`);
     if (!picked) return;
 
     step.hidden = true;
     current++;
 
     if (current >= steps.length) {
-      showResult(form, btn, calcType(steps));
+      btn.removeEventListener("click", onNext);
+      showResult(form, steps, btn);
     } else {
       steps[current].hidden = false;
       btn.disabled = true;
       setupStepListeners(steps[current], btn, current);
       if (current === steps.length - 1) btn.textContent = "Bekijk mijn type";
     }
-  });
+  };
+
+  btn.addEventListener("click", onNext);
 }
 
 function setupStepListeners(step, btn, index) {
@@ -67,8 +79,8 @@ function calcType(steps) {
   return Object.entries(scores).sort((a, b) => b[1] - a[1])[0][0];
 }
 
-function showResult(form, btn, typeKey) {
-  const type = TYPES[typeKey];
+function showResult(form, steps, btn) {
+  const type = TYPES[calcType(steps)];
   btn.hidden = true;
 
   const result = document.createElement("div");
@@ -84,7 +96,8 @@ function showResult(form, btn, typeKey) {
   result.querySelector(".quiz-card__result-label").textContent = type.label;
   result.querySelector(".quiz-card__result-line").textContent  = type.line;
   result.querySelector(".quiz-card__retry").addEventListener("click", () => {
-    location.reload();
+    result.remove();
+    startQuiz(form, steps, btn);
   });
 
   form.appendChild(result);

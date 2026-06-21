@@ -65,8 +65,12 @@ function stepSize(track) {
 function updateControls(track, controls, prev, next) {
   const overflow = track.scrollWidth - track.clientWidth;
   controls.hidden = overflow <= 1;
-  setDisabled(prev, track.scrollLeft <= 0);
-  setDisabled(next, track.scrollLeft >= overflow - 1);
+  setDisabled(prev, Math.round(track.scrollLeft) <= 0);
+  setDisabled(next, Math.round(track.scrollLeft) >= Math.round(overflow) - 1);
+}
+
+export function refreshAll() {
+  document.querySelectorAll("[data-carousel]").forEach(refreshCarousel);
 }
 
 function setDisabled(button, disabled) {

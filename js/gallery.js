@@ -1,3 +1,5 @@
+import { refreshAll } from "./carousel.js";
+
 const MAX_VISIBLE = 10;
 
 export async function initGalleryUpload() {
@@ -32,6 +34,7 @@ async function handleFileChange(event) {
     if (data.success) {
       prependPhoto(uploadItem, data.id, data.alt);
       enforceLimit(track);
+      refreshAll();
     } else {
       showGalleryError(errorEl, friendlyError(data.error));
     }
@@ -70,6 +73,8 @@ async function loadFromAPI() {
 
     const placeholders = Array.from(track.querySelectorAll(".gallery__item--empty"));
     placeholders.slice(-photos.length).forEach(p => p.remove());
+    track.scrollLeft = 0;
+    requestAnimationFrame(refreshAll);
   } catch {
     // stil falen — placeholders blijven zichtbaar
   }

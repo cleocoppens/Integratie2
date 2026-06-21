@@ -148,12 +148,14 @@ em { font-style: normal; }
 }
 .section-head__title em:hover { background: var(--yellow); }
 .section-head__title em.accent--multi {
-  background: var(--yellow);
+  background: transparent;
   -webkit-background-clip: unset;
   background-clip: unset;
   color: var(--teal);
   padding: 0 0.12em;
+  transition: background 0.2s ease;
 }
+.section-head__title em.accent--multi:hover { background: var(--yellow); }
 
 .section-head__text {
   max-width: 46ch;
