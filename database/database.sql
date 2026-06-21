@@ -30,7 +30,8 @@ CREATE TABLE IF NOT EXISTS reviews (
 
 CREATE TABLE IF NOT EXISTS gallery_photos (
   id         INT           AUTO_INCREMENT PRIMARY KEY,
-  filename   VARCHAR(255)  NOT NULL,
+  image_data LONGBLOB      NOT NULL,
+  mime_type  VARCHAR(50)   NOT NULL DEFAULT '',
   alt        VARCHAR(255)  NOT NULL DEFAULT '',
   created_at TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

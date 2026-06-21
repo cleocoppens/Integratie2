@@ -6,7 +6,6 @@ class GalleryPhotoController
 {
     private const MAX_BYTES    = 10 * 1024 * 1024;
     private const ALLOWED_MIME = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-    private const UPLOAD_DIR   = __DIR__ . '/../assets/img/uploads/';
 
     public function index(): void
     {
@@ -14,8 +13,8 @@ class GalleryPhotoController
         try {
             $rows = GalleryPhoto::getLatest(10);
             echo json_encode(array_map(fn($p) => [
-                'filename' => $p['filename'],
-                'alt'      => $p['alt'],
+                'id'  => $p['id'],
+                'alt' => $p['alt'],
             ], $rows));
         } catch (Exception $e) {
             echo json_encode([]);
@@ -44,20 +43,30 @@ class GalleryPhotoController
             $this->json(['success' => false, 'error' => 'type']);
         }
 
-        $ext      = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-        $filename = bin2hex(random_bytes(8)) . '.' . $ext;
-        $dest     = self::UPLOAD_DIR . $filename;
-
-        if (!move_uploaded_file($file['tmp_name'], $dest)) {
-            $this->json(['success' => false, 'error' => 'move']);
+        $imageData = file_get_contents($file['tmp_name']);
+        if ($imageData === false) {
+            $this->json(['success' => false, 'error' => 'upload']);
         }
 
         $alt = trim($_POST['alt'] ?? '');
         if ($alt === '') $alt = 'Sfeerbeeld geüpload door een gebruiker';
 
-        GalleryPhoto::create($filename, $alt);
+        $id = GalleryPhoto::create($imageData, $mime, $alt);
 
-        $this->json(['success' => true, 'filename' => $filename, 'alt' => $alt]);
+        $this->json(['success' => true, 'id' => $id, 'alt' => $alt]);
+    }
+
+    public function serveImage(int $id): void
+    {
+        $photo = GalleryPhoto::getById($id);
+        if (!$photo) {
+            http_response_code(404);
+            exit;
+        }
+        header('Content-Type: ' . $photo['mime_type']);
+        header('Cache-Control: public, max-age=31536000');
+        echo $photo['image_data'];
+        exit;
     }
 
     private function json(array $data): never

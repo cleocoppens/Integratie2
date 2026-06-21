@@ -47,104 +47,53 @@ function checkReviewReady(submitBtn, selectedStars, textarea, locationSel, anonT
   );
 }
 
-function onStarMouseenter(e) {
-  const n     = Number(e.currentTarget.dataset.star);
-  const group = e.currentTarget.closest("[role='group']");
-  highlightStars(group, n, true);
-}
-
-function onStarMouseleave(e) {
-  const group      = e.currentTarget.closest("[role='group']");
-  const starsInput = group.closest("form")?.querySelector("[data-stars-value]");
-  highlightStars(group, Number(starsInput?.value ?? 0), false);
-}
-
-function onStarClick(e) {
-  const btn         = e.currentTarget;
-  const n           = Number(btn.dataset.star);
-  const form        = btn.closest("form");
-  const group       = btn.closest("[role='group']");
-  const starsInput  = form.querySelector("[data-stars-value]");
-  const submitBtn   = form.querySelector(".review-form__submit");
-  const textarea    = form.querySelector(".review-form__text");
-  const locationSel = form.querySelector(".review-form__location");
-  const anonToggle  = form.querySelector("[data-anon-toggle]");
-  const authorInput = form.querySelector("[data-author-field]");
-  starsInput.value = n;
-  highlightStars(group, n, false);
-  checkReviewReady(submitBtn, n, textarea, locationSel, anonToggle, authorInput);
-}
-
-function attachStarListeners(btn) {
-  btn.addEventListener("mouseenter", onStarMouseenter);
-  btn.addEventListener("mouseleave", onStarMouseleave);
-  btn.addEventListener("click",      onStarClick);
-}
-
-function onCityArrowClick(e) {
-  const form     = e.currentTarget.closest("form");
-  const locInput = form?.querySelector(".review-form__location");
-  if (!locInput) return;
-  try { locInput.showPicker(); } catch { locInput.focus(); }
-}
-
-function onAnonToggleChange(e) {
-  const form        = e.currentTarget.closest("form");
-  const anonToggle  = e.currentTarget;
-  const authorInput = form.querySelector("[data-author-field]");
-  const submitBtn   = form.querySelector(".review-form__submit");
-  const starsInput  = form.querySelector("[data-stars-value]");
-  const textarea    = form.querySelector(".review-form__text");
-  const locationSel = form.querySelector(".review-form__location");
-  authorInput.hidden   = anonToggle.checked;
-  authorInput.disabled = anonToggle.checked;
-  checkReviewReady(submitBtn, Number(starsInput.value), textarea, locationSel, anonToggle, authorInput);
-}
-
-function onTextareaInput(e) {
-  const textarea    = e.currentTarget;
-  const form        = textarea.closest("form");
-  const MAX_CHARS   = Number(textarea.maxLength) || 150;
-  const charCount   = form.querySelector("[data-review-char-count]");
-  const submitBtn   = form.querySelector(".review-form__submit");
-  const starsInput  = form.querySelector("[data-stars-value]");
-  const locationSel = form.querySelector(".review-form__location");
-  const anonToggle  = form.querySelector("[data-anon-toggle]");
-  const authorInput = form.querySelector("[data-author-field]");
-  const len = textarea.value.length;
-  charCount.textContent = String(len);
-  charCount.closest(".review-form__count").classList.toggle("is-near-limit", len >= MAX_CHARS - 10);
-  checkReviewReady(submitBtn, Number(starsInput.value), textarea, locationSel, anonToggle, authorInput);
-}
-
-function onReviewFieldChange(e) {
-  const form        = e.currentTarget.closest("form");
-  const submitBtn   = form.querySelector(".review-form__submit");
-  const starsInput  = form.querySelector("[data-stars-value]");
-  const textarea    = form.querySelector(".review-form__text");
-  const locationSel = form.querySelector(".review-form__location");
-  const anonToggle  = form.querySelector("[data-anon-toggle]");
-  const authorInput = form.querySelector("[data-author-field]");
-  checkReviewReady(submitBtn, Number(starsInput.value), textarea, locationSel, anonToggle, authorInput);
-}
-
 function initReviewForm(track) {
   const form = track.querySelector("[data-review-form]");
   if (!form) return;
 
   const starsGroup  = form.querySelector("[role='group']");
-  const cityArrow   = form.querySelector(".review-form__city-arrow");
-  const anonToggle  = form.querySelector("[data-anon-toggle]");
+  const starsInput  = form.querySelector("[data-stars-value]");
   const textarea    = form.querySelector(".review-form__text");
+  const charCount   = form.querySelector("[data-review-char-count]");
   const locationSel = form.querySelector(".review-form__location");
   const authorInput = form.querySelector("[data-author-field]");
+  const anonToggle  = form.querySelector("[data-anon-toggle]");
+  const cityArrow   = form.querySelector(".review-form__city-arrow");
+  const submitBtn   = form.querySelector(".review-form__submit");
+  let selectedStars = 0;
 
-  starsGroup.querySelectorAll("[data-star]").forEach(attachStarListeners);
-  cityArrow?.addEventListener("click",  onCityArrowClick);
-  anonToggle.addEventListener("change", onAnonToggleChange);
-  textarea.addEventListener("input",    onTextareaInput);
-  locationSel.addEventListener("change", onReviewFieldChange);
-  authorInput.addEventListener("input",  onReviewFieldChange);
+  starsGroup.querySelectorAll("[data-star]").forEach(btn => {
+    const n = Number(btn.dataset.star);
+    btn.addEventListener("mouseenter", () => highlightStars(starsGroup, n, true));
+    btn.addEventListener("mouseleave", () => highlightStars(starsGroup, Number(starsInput.value), false));
+    btn.addEventListener("click", () => {
+      selectedStars = n;
+      starsInput.value = n;
+      highlightStars(starsGroup, n, false);
+      checkReviewReady(submitBtn, selectedStars, textarea, locationSel, anonToggle, authorInput);
+    });
+  });
+
+  cityArrow?.addEventListener("click", () => {
+    try { locationSel.showPicker(); } catch { locationSel.focus(); }
+  });
+
+  anonToggle.addEventListener("change", () => {
+    authorInput.hidden   = anonToggle.checked;
+    authorInput.disabled = anonToggle.checked;
+    checkReviewReady(submitBtn, selectedStars, textarea, locationSel, anonToggle, authorInput);
+  });
+
+  const MAX_CHARS = Number(textarea.maxLength) || 150;
+  textarea.addEventListener("input", () => {
+    const len = textarea.value.length;
+    charCount.textContent = String(len);
+    charCount.closest(".review-form__count").classList.toggle("is-near-limit", len >= MAX_CHARS - 10);
+    checkReviewReady(submitBtn, selectedStars, textarea, locationSel, anonToggle, authorInput);
+  });
+  locationSel.addEventListener("change", () => checkReviewReady(submitBtn, selectedStars, textarea, locationSel, anonToggle, authorInput));
+  authorInput.addEventListener("input",  () => checkReviewReady(submitBtn, selectedStars, textarea, locationSel, anonToggle, authorInput));
+
   form.addEventListener("submit", handleReviewSubmit);
 }
 

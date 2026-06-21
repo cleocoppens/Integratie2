@@ -8,10 +8,12 @@ export async function initConfessions() {
 async function loadFromAPI() {
   const list = document.querySelector("[data-feed]");
   if (!list) return;
+
   try {
     const res         = await fetch("api/confessions.php");
     const confessions = await res.json();
     if (!Array.isArray(confessions) || confessions.length === 0) return;
+
     [...confessions].reverse().forEach(c => {
       list.prepend(buildConfessionFromData(c.meta, c.text, c.recognition_count, c.id));
     });
@@ -51,33 +53,16 @@ function refreshFeedControls(list, controls, prev, next) {
   next.setAttribute("aria-disabled", String(list.scrollTop >= overflow - 1));
 }
 
-function onFeedPrev() {
-  const list = document.querySelector("[data-feed]");
-  if (list) list.scrollBy({ top: -feedStepSize(list), behavior: "smooth" });
-}
-
-function onFeedNext() {
-  const list = document.querySelector("[data-feed]");
-  if (list) list.scrollBy({ top: feedStepSize(list), behavior: "smooth" });
-}
-
-function onFeedScroll(e) {
-  const list     = e.currentTarget;
-  const controls = document.querySelector("[data-feed-controls]");
-  const prev     = document.querySelector("[data-feed-prev]");
-  const next     = document.querySelector("[data-feed-next]");
-  if (controls && prev && next) refreshFeedControls(list, controls, prev, next);
-}
-
 function initFeedControls() {
   const list     = document.querySelector("[data-feed]");
   const controls = document.querySelector("[data-feed-controls]");
   const prev     = document.querySelector("[data-feed-prev]");
   const next     = document.querySelector("[data-feed-next]");
   if (!list || !controls || !prev || !next) return;
-  prev.addEventListener("click", onFeedPrev);
-  next.addEventListener("click", onFeedNext);
-  list.addEventListener("scroll", onFeedScroll);
+
+  prev.addEventListener("click", () => { list.scrollBy({ top: -feedStepSize(list), behavior: "smooth" }); });
+  next.addEventListener("click", () => { list.scrollBy({ top:  feedStepSize(list), behavior: "smooth" }); });
+  list.addEventListener("scroll", () => refreshFeedControls(list, controls, prev, next));
   refreshFeedControls(list, controls, prev, next);
 }
 
@@ -100,6 +85,7 @@ function toggleRecognise(button) {
   const delta   = active ? 1 : -1;
   const current = Number.parseInt(counter.textContent, 10) || 0;
   counter.textContent = String(Math.max(0, current + delta));
+
   const id = button.closest("[data-confession-id]")?.dataset.confessionId;
   if (id) saveRecognise(id, delta);
 }
@@ -124,32 +110,24 @@ function checkConfessionReady(button, input, locInput, counter, MAX) {
   button.disabled = input.value.trim() === "" || locInput.value === "";
 }
 
-function onCityArrowClick(e) {
-  const locInput = e.currentTarget.closest("form")?.querySelector(".confession-form__location");
-  if (!locInput) return;
-  try { locInput.showPicker(); } catch { locInput.focus(); }
-}
-
-function onConfessionInputChange(e) {
-  const form     = e.currentTarget.closest(".confession-form");
+function initConfessionForm() {
+  const form     = document.querySelector(".confession-form");
   if (!form) return;
+
   const input    = form.querySelector(".confession-form__input");
   const locInput = form.querySelector(".confession-form__location");
   const button   = form.querySelector("[type='submit']");
+  const arrow    = form.querySelector(".confession-form__city-arrow");
   const counter  = form.querySelector("[data-confession-count]");
   const MAX      = Number(input.maxLength) || 100;
-  checkConfessionReady(button, input, locInput, counter, MAX);
-}
 
-function initConfessionForm() {
-  const form = document.querySelector(".confession-form");
-  if (!form) return;
-  const arrow = form.querySelector(".confession-form__city-arrow");
-  const input = form.querySelector(".confession-form__input");
-  const locInput = form.querySelector(".confession-form__location");
-  arrow?.addEventListener("click", onCityArrowClick);
-  input.addEventListener("input", onConfessionInputChange);
-  locInput.addEventListener("change", onConfessionInputChange);
+  arrow?.addEventListener("click", () => {
+    try { locInput.showPicker(); } catch { locInput.focus(); }
+  });
+
+  input.addEventListener("input",   () => checkConfessionReady(button, input, locInput, counter, MAX));
+  locInput.addEventListener("change", () => checkConfessionReady(button, input, locInput, counter, MAX));
+
   form.addEventListener("submit", handleConfessionSubmit);
 }
 

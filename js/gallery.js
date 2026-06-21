@@ -30,7 +30,7 @@ async function handleFileChange(event) {
     const data = await res.json();
 
     if (data.success) {
-      prependPhoto(uploadItem, data.filename, data.alt);
+      prependPhoto(uploadItem, data.id, data.alt);
       enforceLimit(track);
     } else {
       showGalleryError(errorEl, friendlyError(data.error));
@@ -66,7 +66,7 @@ async function loadFromAPI() {
     const photos = await res.json();
     if (!Array.isArray(photos) || photos.length === 0) return;
 
-    [...photos].reverse().forEach(p => prependPhoto(uploadItem, p.filename, p.alt));
+    [...photos].reverse().forEach(p => prependPhoto(uploadItem, p.id, p.alt));
 
     const placeholders = Array.from(track.querySelectorAll(".gallery__item--empty"));
     placeholders.slice(-photos.length).forEach(p => p.remove());
@@ -75,12 +75,12 @@ async function loadFromAPI() {
   }
 }
 
-function prependPhoto(uploadItem, filename, alt) {
+function prependPhoto(uploadItem, id, alt) {
   const li  = document.createElement("li");
   li.className = "gallery__item";
   const img = document.createElement("img");
   img.className = "gallery__img";
-  img.src       = "assets/img/uploads/" + filename;
+  img.src       = "api/photo.php?id=" + id;
   img.alt       = alt;
   img.width     = 280;
   img.height    = 340;

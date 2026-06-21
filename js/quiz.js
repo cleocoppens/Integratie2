@@ -21,48 +21,41 @@ const TYPES = {
   },
 };
 
-let _steps   = [];
-let _current = 0;
-let _btn     = null;
-
 export function initQuiz() {
   const form = document.querySelector("[data-quiz]");
   if (!form) return;
-  _steps   = Array.from(form.querySelectorAll("[data-quiz-step]"));
-  _btn     = form.querySelector("[data-quiz-next]");
-  _current = 0;
-  _btn.disabled = true;
-  setupStepListeners(_steps[_current], _current);
-  _btn.addEventListener("click", handleQuizNext);
+
+  const steps  = Array.from(form.querySelectorAll("[data-quiz-step]"));
+  const btn    = form.querySelector("[data-quiz-next]");
+  let current  = 0;
+
+  btn.disabled = true;
+  setupStepListeners(steps[current], btn, current);
+
+  btn.addEventListener("click", () => {
+    const step = steps[current];
+    const name = `q${current + 1}`;
+    const picked = step.querySelector(`input[name="${name}"]:checked`);
+    if (!picked) return;
+
+    step.hidden = true;
+    current++;
+
+    if (current >= steps.length) {
+      showResult(form, btn, calcType(steps));
+    } else {
+      steps[current].hidden = false;
+      btn.disabled = true;
+      setupStepListeners(steps[current], btn, current);
+      if (current === steps.length - 1) btn.textContent = "Bekijk mijn type";
+    }
+  });
 }
 
-function handleQuizNext() {
-  const step   = _steps[_current];
-  const name   = `q${_current + 1}`;
-  const picked = step.querySelector(`input[name="${name}"]:checked`);
-  if (!picked) return;
-  step.hidden = true;
-  _current++;
-  if (_current >= _steps.length) {
-    showResult(_btn.closest("[data-quiz]"), calcType(_steps));
-  } else {
-    _steps[_current].hidden = false;
-    _btn.disabled = true;
-    setupStepListeners(_steps[_current], _current);
-    if (_current === _steps.length - 1) _btn.textContent = "Bekijk mijn type";
-  }
-}
-
-function enableNextBtn() {
-  _btn.disabled = false;
-}
-
-function setupStepListeners(step, index) {
-  step.querySelectorAll(`input[name="q${index + 1}"]`).forEach(attachRadioListener);
-}
-
-function attachRadioListener(radio) {
-  radio.addEventListener("change", enableNextBtn);
+function setupStepListeners(step, btn, index) {
+  step.querySelectorAll(`input[name="q${index + 1}"]`).forEach(radio => {
+    radio.addEventListener("change", () => { btn.disabled = false; });
+  });
 }
 
 function calcType(steps) {
@@ -74,13 +67,9 @@ function calcType(steps) {
   return Object.entries(scores).sort((a, b) => b[1] - a[1])[0][0];
 }
 
-function handleRetry() {
-  location.reload();
-}
-
-function showResult(form, typeKey) {
+function showResult(form, btn, typeKey) {
   const type = TYPES[typeKey];
-  _btn.hidden = true;
+  btn.hidden = true;
 
   const result = document.createElement("div");
   result.className = "quiz-card__result";
@@ -94,7 +83,10 @@ function showResult(form, typeKey) {
   result.querySelector(".quiz-card__result-name").textContent  = type.name;
   result.querySelector(".quiz-card__result-label").textContent = type.label;
   result.querySelector(".quiz-card__result-line").textContent  = type.line;
-  result.querySelector(".quiz-card__retry").addEventListener("click", handleRetry);
+  result.querySelector(".quiz-card__retry").addEventListener("click", () => {
+    location.reload();
+  });
 
   form.appendChild(result);
 }
+

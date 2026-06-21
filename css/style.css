@@ -242,9 +242,9 @@ em { font-style: normal; }
 .deco--lamp    { width: 720px; height: 940px; top: -22rem; right: -4rem; background-image: url("../assets/img/deco/uitlamp.png"), url("../assets/img/deco/lamp.png"); background-size: contain, contain; background-position: right bottom, right bottom; cursor: pointer; pointer-events: auto; }
 .deco--lamp.is-on { background-image: url("../assets/img/deco/lamp.png"); background-size: contain; background-position: right bottom; }
 .deco--lamp::before {
-  content: "Klik op de lamp";
+  content: "Klik de lamp";
   position: absolute;
-  top: 78%;
+  top: 65%;
   left: 60%;
   transform: translateX(-100%) translateY(-50%);
   background: var(--teal);
@@ -259,8 +259,9 @@ em { font-style: normal; }
   animation: hint-bounce 1.6s ease-in-out infinite;
   transition: opacity 0.3s ease;
   z-index: 11;
+  pointer-events: none;
 }
-.deco--lamp.is-on::before { opacity: 0; pointer-events: none; }
+body.lamp-on .deco--lamp::before { opacity: 0; }
 .deco--plant   { width: 180px; height: 220px; bottom: 10rem; right: 22vw; top: auto;  background-image: url("../assets/img/deco/plant.png"); }
 .deco--mouse   { width: 600px; height: 450px; top: 22%;    left: -4vw;              background-image: url("../assets/img/deco/mouse.png"); }
 .deco--pencils { display: none; }

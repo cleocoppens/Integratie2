@@ -10,17 +10,14 @@ import { initGalleryUpload } from "./gallery.js";
 import { initReviews } from "./reviews.js";
 import { initScrollAnimations } from "./animations.js";
 
-function toggleTasReveal(e) {
-  e.currentTarget.classList.toggle("is-revealed");
-}
-
 initTypewriter();
 initCarousels();
+document.querySelector(".deco--tas-confessions")
+  ?.addEventListener("click", e => e.currentTarget.classList.toggle("is-revealed"));
 initCounter();
 initQuiz();
 initFormValidation();
 initScrollAnimations();
-document.querySelector(".deco--tas-confessions")?.addEventListener("click", toggleTasReveal);
 await initConfessions();
 await initGalleryUpload();
 await initReviews();
