@@ -7,37 +7,40 @@ export async function initGalleryUpload() {
   if (!uploadItem) return;
 
   const fileInput = uploadItem.querySelector("[data-gallery-input]");
-  const track     = uploadItem.closest("[data-carousel-track]");
-  const label     = uploadItem.querySelector("[data-gallery-label]");
-  const errorEl   = uploadItem.querySelector("[data-gallery-error]");
+  fileInput.addEventListener("change", handleFileChange);
+}
 
-  fileInput.addEventListener("change", async () => {
-    const file = fileInput.files[0];
-    if (!file) return;
+async function handleFileChange(event) {
+  const fileInput  = event.currentTarget;
+  const uploadItem = fileInput.closest("[data-gallery-upload]");
+  const track      = uploadItem.closest("[data-carousel-track]");
+  const label      = uploadItem.querySelector("[data-gallery-label]");
+  const errorEl    = uploadItem.querySelector("[data-gallery-error]");
+  const file       = fileInput.files[0];
+  if (!file) return;
 
-    hideGalleryError(errorEl);
-    setGalleryLabel(label, "Uploaden…");
+  hideGalleryError(errorEl);
+  setGalleryLabel(label, "Uploaden…");
 
-    const formData = new FormData();
-    formData.append("photo", file);
+  const formData = new FormData();
+  formData.append("photo", file);
 
-    try {
-      const res  = await fetch("upload.php", { method: "POST", body: formData });
-      const data = await res.json();
+  try {
+    const res  = await fetch("upload.php", { method: "POST", body: formData });
+    const data = await res.json();
 
-      if (data.success) {
-        prependPhoto(uploadItem, data.filename, data.alt);
-        enforceLimit(track);
-      } else {
-        showGalleryError(errorEl, friendlyError(data.error));
-      }
-    } catch {
-      showGalleryError(errorEl, "Upload mislukt. Probeer opnieuw.");
-    } finally {
-      setGalleryLabel(label, "Voeg jouw foto toe");
-      fileInput.value = "";
+    if (data.success) {
+      prependPhoto(uploadItem, data.filename, data.alt);
+      enforceLimit(track);
+    } else {
+      showGalleryError(errorEl, friendlyError(data.error));
     }
-  });
+  } catch {
+    showGalleryError(errorEl, "Upload mislukt. Probeer opnieuw.");
+  } finally {
+    setGalleryLabel(label, "Voeg jouw foto toe");
+    fileInput.value = "";
+  }
 }
 
 function setGalleryLabel(label, text) {

@@ -10,14 +10,12 @@ const PHONE_PATTERN = /^[0-9+\s()/-]{8,20}$/;
 
 export function initFormValidation() {
   const forms = document.querySelectorAll(".contact-form");
-  forms.forEach(form => {
-    setupFormValidation(form);
-    setupCharCount(form);
-  });
+  forms.forEach(setupFormValidation);
 }
 
 function setupFormValidation(form) {
   setupSubmitToggle(form);
+  setupCharCount(form);
   form.addEventListener("submit", handleContactSubmit);
 }
 
@@ -46,22 +44,38 @@ async function handleContactSubmit(e) {
   }
 }
 
+function onFieldInputOrChange(e) {
+  const inp    = e.currentTarget;
+  const form   = inp.closest("form");
+  const btn    = form.querySelector("[type='submit']");
+  const inputs = Array.from(form.querySelectorAll(".field__input"));
+  clearError(inp);
+  checkContactReady(btn, inputs);
+}
+
+function onFieldBlur(e) {
+  const inp    = e.currentTarget;
+  const form   = inp.closest("form");
+  const btn    = form.querySelector("[type='submit']");
+  const inputs = Array.from(form.querySelectorAll(".field__input"));
+  if (inp.value.trim() !== "") {
+    const err = validateInput(inp);
+    if (err) showError(inp, err); else clearError(inp);
+  }
+  checkContactReady(btn, inputs);
+}
+
+function setupInputListeners(inp) {
+  inp.addEventListener("input",  onFieldInputOrChange);
+  inp.addEventListener("change", onFieldInputOrChange);
+  inp.addEventListener("blur",   onFieldBlur);
+}
+
 function setupSubmitToggle(form) {
   const btn    = form.querySelector("[type='submit']");
   const inputs = Array.from(form.querySelectorAll(".field__input"));
   if (!btn) return;
-
-  inputs.forEach(inp => {
-    inp.addEventListener("input",  () => { clearError(inp); checkContactReady(btn, inputs); });
-    inp.addEventListener("change", () => { clearError(inp); checkContactReady(btn, inputs); });
-    inp.addEventListener("blur",   () => {
-      if (inp.value.trim() !== "") {
-        const err = validateInput(inp);
-        if (err) showError(inp, err); else clearError(inp);
-      }
-      checkContactReady(btn, inputs);
-    });
-  });
+  inputs.forEach(setupInputListeners);
   checkContactReady(btn, inputs);
 }
 
@@ -69,18 +83,32 @@ function checkContactReady(btn, inputs) {
   btn.disabled = !inputs.every(inp => inp.value.trim() !== "");
 }
 
+function handleRetryContact() {
+  const form    = document.querySelector(".contact-form");
+  const success = document.querySelector(".contact-success");
+  if (!form || !success) return;
+  form.reset();
+  form.querySelector("[type='submit']").disabled = true;
+  form.hidden    = false;
+  success.hidden = true;
+}
+
 function showContactSuccess() {
   const success = document.querySelector(".contact-success");
   const form    = document.querySelector(".contact-form");
   if (success) success.hidden = false;
   if (form)    form.hidden    = true;
+  success.querySelector(".contact-success__retry")
+    ?.addEventListener("click", handleRetryContact, { once: true });
+}
 
-  success.querySelector(".contact-success__retry")?.addEventListener("click", () => {
-    form.reset();
-    form.querySelector("[type='submit']").disabled = true;
-    form.hidden    = false;
-    success.hidden = true;
-  }, { once: true });
+function onTextareaCount(e) {
+  const textarea = e.currentTarget;
+  const form     = textarea.closest("form");
+  const max      = parseInt(textarea.getAttribute("maxlength"), 10);
+  const span     = form.querySelector("[data-contact-char-count]");
+  const wrap     = span?.closest(".field__count");
+  updateCharCount(textarea, span, wrap, max);
 }
 
 function setupCharCount(form) {
@@ -89,8 +117,7 @@ function setupCharCount(form) {
   const max  = parseInt(textarea.getAttribute("maxlength"), 10);
   const span = form.querySelector("[data-contact-char-count]");
   const wrap = span?.closest(".field__count");
-
-  textarea.addEventListener("input", () => updateCharCount(textarea, span, wrap, max));
+  textarea.addEventListener("input", onTextareaCount);
   updateCharCount(textarea, span, wrap, max);
 }
 

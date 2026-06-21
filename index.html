@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;0,800;0,900;1,500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:,">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -49,7 +50,7 @@
 
     <!-- ========================== SFEERBEELDEN ========================== -->
     <section class="gallery" aria-labelledby="gallery-title">
-      <header class="section-head">
+      <header class="section-head" data-reveal>
         <p class="eyebrow">Sfeerbeelden</p>
         <h2 class="section-head__title" id="gallery-title">Beelden uit <em>jouw</em> uur.</h2>
         <p class="section-head__hint" aria-hidden="true">Scroll&nbsp;&#8614;</p>
@@ -91,19 +92,19 @@
     <!-- ============================ LIVE NU ============================ -->
     <section class="live" aria-labelledby="live-title">
       <div class="live__inner">
-        <span class="deco deco--live-plant" aria-hidden="true"></span>
-        <header class="section-head section-head--on-dark">
+        <header class="section-head section-head--on-dark" data-reveal>
           <p class="eyebrow">Live nu</p>
           <h2 class="section-head__title" id="live-title">
             Op dit moment ook <mark class="mark--red"><em>vroeg</em></mark> op kantoor
           </h2>
+          <span class="deco deco--clock-live" aria-hidden="true"></span>
           <p class="section-head__text">
             Ergens in België zit nu iemand ook alleen achter een laptop. Nog voor de rest aankomt.
           </p>
         </header>
 
         <div class="live__grid">
-          <article class="live-card">
+          <article class="live-card" data-reveal data-reveal-delay="1">
             <p class="counter">
               <span class="counter__value" data-counter aria-live="polite">248</span>
               <span class="counter__label">Live bijgewerkt</span>
@@ -124,38 +125,35 @@
           </article>
         </div>
 
-        <span class="deco deco--flowers" aria-hidden="true"></span>
-        <span class="deco deco--markers" aria-hidden="true"></span>
       </div>
     </section>
 
     <!-- ============================ HET CONCEPT ============================ -->
     <section class="concept" id="concept" aria-labelledby="concept-title" style="position:relative">
-      <header class="section-head">
+      <header class="section-head" data-reveal>
         <p class="eyebrow">Het concept</p>
         <h2 class="section-head__title" id="concept-title">Zo werkt de <em>First Table</em>?</h2>
-        <span class="deco deco--clock" aria-hidden="true"></span>
+        <span class="deco deco--markers-concept" aria-hidden="true"></span>
       </header>
 
-      <span class="deco deco--pot" aria-hidden="true"></span>
       <div class="carousel" data-carousel>
         <ol class="carousel__track concept__track" data-carousel-track>
-          <li class="step-card">
+          <li class="step-card" data-reveal data-reveal-delay="1">
             <span class="step-card__number">1</span>
             <h3 class="step-card__title">Meld je aan</h3>
             <p class="step-card__text">Vul je aankomsttijd, stad en early type in. Wij zoeken jouw match.</p>
           </li>
-          <li class="step-card">
+          <li class="step-card" data-reveal data-reveal-delay="2">
             <span class="step-card__number">2</span>
             <h3 class="step-card__title">Wij koppelen</h3>
             <p class="step-card__text">Op basis van jouw uur en stad linken we je aan iemand met hetzelfde ritme.</p>
           </li>
-          <li class="step-card">
+          <li class="step-card" data-reveal data-reveal-delay="3">
             <span class="step-card__number">3</span>
             <h3 class="step-card__title">Jij arriveert</h3>
             <p class="step-card__text">Jij stapt binnen en bent niet langer de enige. Jullie ochtend begint samen.</p>
           </li>
-          <li class="step-card">
+          <li class="step-card" data-reveal data-reveal-delay="4">
             <span class="step-card__number">4</span>
             <h3 class="step-card__title">Geen agenda</h3>
             <p class="step-card__text">Geen verplichtingen, geen planning. Gewoon twee vroege vogels die de dag beginnen.</p>
@@ -172,16 +170,16 @@
     <!-- ====================== OCHTEND-CONFESSIONAL ====================== -->
     <section class="confessions" aria-labelledby="confessions-title">
       <div class="confessions__inner">
-        <header class="section-head section-head--on-dark">
+        <header class="section-head section-head--on-dark" data-reveal>
           <p class="eyebrow">Ochtend-confessional</p>
           <h2 class="section-head__title" id="confessions-title">
             Jij bent niet de <mark class="mark--aqua"><em class="mark__accent--blue">enige</em></mark> die dit denkt.
           </h2>
+          <span class="deco deco--tas-confessions" aria-hidden="true"></span>
           <p class="section-head__text">
             Deel anoniem jouw meest herkenbare First In-moment. Anderen reageren met een vinkje
             als ze het herkennen.
           </p>
-          <span class="deco deco--books" aria-hidden="true"></span>
         </header>
 
         <div class="feed" data-feed-container>
@@ -192,7 +190,7 @@
             <button class="carousel__button" type="button" data-feed-next aria-label="Volgende confessionals">&darr;</button>
           </div>
 
-          <form class="confession-form" action="confession.php" method="post" novalidate>
+          <form class="confession-form" action="confession.php" method="post" novalidate data-reveal data-reveal-delay="1">
             <div class="confession-form__field">
               <div class="confession-form__city">
                 <label class="visually-hidden" for="confession-location">Stad</label>
@@ -219,14 +217,13 @@
 
     <!-- ============================== QUIZ ============================== -->
     <section class="quiz" aria-labelledby="quiz-title">
-      <header class="section-head">
+      <header class="section-head" data-reveal>
         <p class="eyebrow">Doe mee</p>
         <h2 class="section-head__title" id="quiz-title">Ontdek jouw <em class="accent--multi">early type</em>.</h2>
-        <span class="deco deco--markers-2" aria-hidden="true"></span>
         <span class="deco deco--stiftjes" aria-hidden="true"></span>
       </header>
 
-      <form class="quiz-card" action="quiz.php" method="post" data-quiz novalidate>
+      <form class="quiz-card" action="quiz.php" method="post" data-quiz novalidate data-reveal data-reveal-delay="1">
 
         <!-- Vraag 1 -->
         <fieldset class="quiz-card__step" data-quiz-step="1">
@@ -294,7 +291,7 @@
 
     <!-- ============================= REVIEWS ============================= -->
     <section class="reviews" aria-labelledby="reviews-title">
-      <header class="section-head">
+      <header class="section-head" data-reveal>
         <p class="eyebrow">Reviews</p>
         <h2 class="section-head__title" id="reviews-title">Zo vinden <em>andere</em> het.</h2>
       </header>
@@ -352,10 +349,10 @@
 
     <!-- ============================= CONTACT ============================= -->
     <section class="contact" aria-labelledby="contact-title">
-      <header class="section-head">
+      <header class="section-head" data-reveal>
         <p class="eyebrow">Contact</p>
         <h2 class="section-head__title" id="contact-title">Stel hier <em>jouw vragen</em>.</h2>
-        <span class="deco deco--scanner" aria-hidden="true"></span>
+        <span class="deco deco--books-contact" aria-hidden="true"></span>
       </header>
 
       <div class="contact-success" hidden>
@@ -365,7 +362,7 @@
         <button class="button button--primary contact-success__retry" type="button">Nog een vraag stellen</button>
       </div>
 
-      <form class="contact-form" action="contact.php" method="post" novalidate>
+      <form class="contact-form" action="contact.php" method="post" novalidate data-reveal data-reveal-delay="1">
         <div class="field">
           <label class="visually-hidden" for="name">Naam</label>
           <input class="field__input" type="text" id="name" name="name" placeholder="Naam" autocomplete="name" required>

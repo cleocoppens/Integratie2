@@ -68,6 +68,24 @@ body {
 
 h1, h2, h3 { line-height: 1.02; font-weight: 800; }
 
+/* ------------------------------- SCROLL REVEAL ------------------------------ */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(1.8rem);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+[data-reveal][data-reveal-delay="1"] { transition-delay: 0.12s; }
+[data-reveal][data-reveal-delay="2"] { transition-delay: 0.24s; }
+[data-reveal][data-reveal-delay="3"] { transition-delay: 0.36s; }
+[data-reveal][data-reveal-delay="4"] { transition-delay: 0.48s; }
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] { opacity: 1; transform: none; transition: none; }
+}
+
 em { font-style: normal; }
 
 /* ------------------------------- 4. HELPERS ------------------------------ */
@@ -123,10 +141,12 @@ em { font-style: normal; }
   font-style: italic;
   font-weight: 400;
   color: var(--teal);
-  background: var(--yellow);
+  background: transparent;
   padding: 0 0.12em;
   border-radius: 6px;
+  transition: background 0.2s ease;
 }
+.section-head__title em:hover { background: var(--yellow); }
 .section-head__title em.accent--multi {
   background: var(--yellow);
   -webkit-background-clip: unset;
@@ -156,8 +176,10 @@ em { font-style: normal; }
 .section-head--on-dark .section-head__title { color: var(--ink); }
 .section-head--on-dark .section-head__title em { color: var(--teal-deep); }
 
-.mark--aqua  { background: var(--teal); padding: 0 0.18em; border-radius: 6px; }
-.mark--red   { background: var(--teal); padding: 0 0.18em; border-radius: 6px; }
+.mark--aqua  { background: transparent; padding: 0 0.18em; border-radius: 6px; transition: background 0.2s ease; }
+.mark--aqua:hover { background: var(--teal); }
+.mark--red   { background: transparent; padding: 0 0.18em; border-radius: 6px; transition: background 0.2s ease; }
+.mark--red:hover { background: var(--teal); }
 .section-head__title .mark--red em { background: transparent; color: var(--blue); }
 .mark__accent--blue { font-family: var(--font-accent); font-style: italic; font-weight: 400; color: var(--blue) !important; background: transparent !important; padding: 0 !important; }
 .accent--multi {
@@ -219,18 +241,40 @@ em { font-style: normal; }
 }
 .deco--lamp    { width: 720px; height: 940px; top: -22rem; right: -4rem; background-image: url("../assets/img/deco/uitlamp.png"), url("../assets/img/deco/lamp.png"); background-size: contain, contain; background-position: right bottom, right bottom; cursor: pointer; pointer-events: auto; }
 .deco--lamp.is-on { background-image: url("../assets/img/deco/lamp.png"); background-size: contain; background-position: right bottom; }
+.deco--lamp::before {
+  content: "Klik op de lamp";
+  position: absolute;
+  top: 78%;
+  left: 60%;
+  transform: translateX(-100%) translateY(-50%);
+  background: var(--teal);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 0.3em 0.9em;
+  border-radius: 2rem;
+  white-space: nowrap;
+  animation: hint-bounce 1.6s ease-in-out infinite;
+  transition: opacity 0.3s ease;
+  z-index: 11;
+}
+.deco--lamp.is-on::before { opacity: 0; pointer-events: none; }
 .deco--plant   { width: 180px; height: 220px; bottom: 10rem; right: 22vw; top: auto;  background-image: url("../assets/img/deco/plant.png"); }
 .deco--mouse   { width: 600px; height: 450px; top: 22%;    left: -4vw;              background-image: url("../assets/img/deco/mouse.png"); }
 .deco--pencils { display: none; }
 .deco--stylos  { width: 560px; height: 420px; bottom: -16rem; left: -2vw; background-image: url("../assets/img/deco/stylos.png"); }
-.deco--flowers { width: 120px; height: 150px; top: 4rem;   right: 22vw; background-image: url("../assets/img/deco/flowers.png"); }
 .deco--markers { width: 220px; height: 90px;  bottom: 0;   right: 6vw;  background-image: url("../assets/img/deco/markers.png"); }
 .deco--clock   { width: 110px; height: 110px; top: -0.5rem; right: 22vw; background-image: url("../assets/img/deco/clock.png"); }
-.deco--pot     { width: 240px; height: 320px; bottom: -4rem; right: 30vw; top: auto; z-index: 10; background-image: url("../assets/img/deco/pot.png"); }
-.deco--books   { width: 150px; height: 110px; top: -2rem;  right: 6vw;  background-image: url("../assets/img/deco/books.png"); }
+.deco--clock-live { width: 160px; height: 155px; top: -0.5rem; left: 58rem; background-image: url("../assets/img/deco/clock.png"); }
+.deco--pot     { width: 240px; height: 320px; bottom: -4rem; right: 40vw; top: auto; z-index: 10; background-image: url("../assets/img/deco/pot.png"); }
+.feed__books-deco { display: flex; justify-content: center; margin: -28rem 0 -20rem; position: relative; z-index: 0; }
+.deco--books   { position: relative; display: block; width: 100%; aspect-ratio: 3/2; background-image: url("../assets/img/deco/books.png"); background-size: 100% auto; background-position: bottom center; z-index: 0; }
 .deco--markers-2{ width: 220px; height: 90px; top: -3rem;  right: 18vw; background-image: url("../assets/img/deco/markers.png"); }
+.deco--markers-concept { width: 900px; height: 338px; top: -7rem; right: -4rem; background-image: url("../assets/img/deco/markers.png"); z-index: 10; }
 .deco--stiftjes { width: 300px; height: 225px; top: -4.5rem; right: 14vw; background-image: url("../assets/img/deco/stiftjes.png"); }
-.deco--scanner { width: 150px; height: 120px; top: -3rem;  right: 18vw; background-image: url("../assets/img/deco/scanner.png"); }
+.deco--books-contact { width: 260px; height: 347px; top: -7rem; left: 44rem; background-image: url("../assets/img/deco/books.png"); background-size: contain; }
 
 /* carousel (progressive enhancement: zonder JS gewoon scrollbaar) */
 .carousel { position: relative; max-width: var(--maxw); margin: 2rem auto 0; padding: 0 6vw; }
@@ -312,8 +356,10 @@ em { font-style: normal; }
   background: transparent;
   padding: 0 0.12em;
   border-radius: 8px;
+  transition: background 0.2s ease;
 }
 body.lamp-on .hero__mark--yellow { background: var(--yellow); }
+.hero__mark--yellow:hover { background: var(--yellow); }
 .hero__title .hero__accent {
   font-family: var(--font-accent);
   font-style: italic;
@@ -329,8 +375,9 @@ body.lamp-on .hero__mark--yellow { background: var(--yellow); }
 .hero__lead--red   { color: var(--orange); }
 .hero__lead--green { color: var(--teal); display: block; margin-top: 0.4rem; }
 .hero__actions { grid-column: 2; display: flex; flex-direction: column; align-items: flex-start; gap: 0.8rem; margin-top: 10rem; }
+@keyframes type-line { to { clip-path: inset(0 0% 0 0); } }
 
-.deco--live-plant { width: 360px; height: 440px; bottom: 9rem; right: 10vw; top: auto; background-image: url("../assets/img/deco/tas.png"); background-size: contain; background-position: bottom center; }
+.deco--live-plant { width: 360px; height: 440px; bottom: 0; right: -3rem; top: auto; background-image: url("../assets/img/deco/tas.png"); background-size: contain; background-position: bottom center; }
 
 /* SFEERBEELDEN */
 .gallery { padding: 1rem 0 3rem; }
@@ -429,7 +476,8 @@ body.lamp-on .hero__mark--yellow { background: var(--yellow); }
 .live-card .counter { margin-bottom: 0; flex-shrink: 0; padding-right: 2rem; border-right: 2px solid var(--yellow-deep); }
 .live-card__body { flex: 1; }
 .live-card__title { font-size: 1.3rem; color: var(--ink); }
-.live-card__title em { font-family: var(--font-accent); font-style: italic; font-weight: 400; color: var(--orange); background: var(--yellow); padding: 0 0.12em; border-radius: 6px; }
+.live-card__title em { font-family: var(--font-accent); font-style: italic; font-weight: 400; color: var(--orange); background: transparent; padding: 0 0.12em; border-radius: 6px; transition: background 0.2s ease; }
+.live-card__title em:hover { background: var(--yellow); }
 .live-card__text { margin-top: 0.5rem; font-size: 0.95rem; }
 .live-card__tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.1rem; }
 
@@ -456,12 +504,62 @@ body.lamp-on .hero__mark--yellow { background: var(--yellow); }
 /* OCHTEND-CONFESSIONAL */
 .confessions { padding: 3.5rem 0; background: var(--yellow); }
 .confessions__inner { position: relative; }
+.deco--tas-confessions {
+  width: 340px;
+  height: 415px;
+  top: -10rem;
+  right: 4vw;
+  background-image: url("../assets/img/deco/taszonder.png");
+  z-index: 10;
+  pointer-events: auto;
+  cursor: pointer;
+}
+.deco--tas-confessions::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("../assets/img/deco/tas.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.deco--tas-confessions.is-revealed::after { opacity: 1; }
+.deco--tas-confessions::before {
+  content: "Klik om te onthullen";
+  position: absolute;
+  top: 78%;
+  left: 60%;
+  transform: translateX(-100%) translateY(-50%);
+  background: var(--teal);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 0.3em 0.9em;
+  border-radius: 2rem;
+  white-space: nowrap;
+  animation: hint-bounce 1.6s ease-in-out infinite;
+  transition: opacity 0.3s ease;
+  z-index: 11;
+}
+.deco--tas-confessions.is-revealed::before { opacity: 0; pointer-events: none; }
+@keyframes hint-bounce {
+  0%, 100% { transform: translateX(-100%) translateY(-50%) translateY(0); }
+  50%       { transform: translateX(-100%) translateY(-50%) translateY(-5px); }
+}
+
+
 .feed {
   max-width: var(--maxw);
   margin: 2rem auto 0;
   padding: 0 6vw;
 }
 .feed__list {
+  position: relative;
+  z-index: 1;
   background: var(--paper);
   border-radius: var(--radius-lg);
   padding: 0.6rem;
@@ -474,7 +572,7 @@ body.lamp-on .hero__mark--yellow { background: var(--yellow); }
 .feed__list::-webkit-scrollbar { display: none; }
 .feed__controls {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 0.5rem;
   margin-top: 0.8rem;
 }
@@ -502,6 +600,8 @@ body.lamp-on .hero__mark--yellow { background: var(--yellow); }
 }
 .confession__recognise:hover { color: var(--orange); }
 .confession-form {
+  position: relative;
+  z-index: 1;
   display: flex;
   gap: 0.6rem;
   margin-top: 1rem;
@@ -576,7 +676,8 @@ body.lamp-on .hero__mark--yellow { background: var(--yellow); }
   color: var(--orange);
   text-align: center;
 }
-.quiz-card__question em { font-family: var(--font-accent); font-style: italic; font-weight: 400; background: var(--teal); color: var(--blue); padding: 0 0.12em; border-radius: 6px; }
+.quiz-card__question em { font-family: var(--font-accent); font-style: italic; font-weight: 400; background: transparent; color: var(--blue); padding: 0 0.12em; border-radius: 6px; transition: background 0.2s ease; }
+.quiz-card__question em:hover { background: var(--teal); }
 .quiz-card__hint { text-align: center; font-size: 0.85rem; margin-top: 0.3rem; }
 .quiz-card__options {
   display: grid;
@@ -639,7 +740,7 @@ body.lamp-on .hero__mark--yellow { background: var(--yellow); }
   scrollbar-width: none;
 }
 .review::-webkit-scrollbar { display: none; }
-.review__stars { color: var(--orange); font-size: 1.4rem; letter-spacing: 0.1em; flex-shrink: 0; }
+.review__stars { color: var(--yellow); font-size: 1.4rem; letter-spacing: 0.1em; flex-shrink: 0; }
 .review__quote { font-size: 0.95rem; line-height: 1.5; overflow-wrap: break-word; word-break: break-word; }
 .review__author { font-style: normal; font-weight: 700; font-size: 0.85rem; margin-top: auto; flex-shrink: 0; }
 
@@ -655,7 +756,7 @@ body.lamp-on .hero__mark--yellow { background: var(--yellow); }
   transition: color 0.1s;
 }
 .review-form__star.is-active,
-.review-form__star.is-hover { color: var(--orange); }
+.review-form__star.is-hover { color: var(--yellow); }
 
 .review-form__text {
   flex: 1; resize: none; border: 1.5px solid color-mix(in srgb, var(--ink) 30%, transparent);
@@ -748,8 +849,8 @@ body.lamp-on .hero__mark--yellow { background: var(--yellow); }
   .confession { grid-template-columns: 1fr auto; }
   .confession__meta { grid-column: 1 / -1; }
   .deco--lamp { width: 150px; height: 150px; }
-  .deco--mouse, .deco--pencils, .deco--flowers, .deco--clock, .deco--books,
-  .deco--markers, .deco--markers-2, .deco--scanner { display: none; }
+  .deco--mouse, .deco--pencils, .deco--clock, .deco--books,
+  .deco--markers, .deco--markers-2 { display: none; }
 }
 
 /* --------------------------- 8. TOEGANKELIJKHEID ------------------------- */
