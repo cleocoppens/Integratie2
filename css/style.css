@@ -204,7 +204,8 @@ em { font-style: normal; }
   background-size: contain;
   pointer-events: none;
 }
-.deco--lamp    { width: 720px; height: 940px; top: -22rem; right: -4rem; background-image: url("../assets/img/deco/lamp.png"); }
+.deco--lamp    { width: 720px; height: 940px; top: -22rem; right: -4rem; background-image: url("../assets/img/deco/uitlamp.png"), url("../assets/img/deco/lamp.png"); background-size: contain, contain; background-position: right bottom, right bottom; cursor: pointer; pointer-events: auto; }
+.deco--lamp.is-on { background-image: url("../assets/img/deco/lamp.png"); background-size: contain; background-position: right bottom; }
 .deco--plant   { width: 180px; height: 220px; bottom: 10rem; right: 22vw; top: auto;  background-image: url("../assets/img/deco/plant.png"); }
 .deco--mouse   { width: 600px; height: 450px; top: 22%;    left: -4vw;              background-image: url("../assets/img/deco/mouse.png"); }
 .deco--pencils { display: none; }
@@ -286,11 +287,17 @@ em { font-style: normal; }
 .hero__line { display: block; }
 .hero__line--indent { padding-left: clamp(2rem, 12vw, 8rem); }
 .hero__mark {
-  background: var(--aqua);
+  background: var(--yellow);
   color: var(--orange);
   padding: 0 0.12em;
   border-radius: 8px;
 }
+.hero__mark--yellow {
+  background: transparent;
+  padding: 0 0.12em;
+  border-radius: 8px;
+}
+body.lamp-on .hero__mark--yellow { background: var(--yellow); }
 .hero__accent {
   font-family: var(--font-accent);
   font-style: italic;

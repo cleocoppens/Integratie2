@@ -21,11 +21,11 @@
         <h1 class="hero__title" id="hero-title">
           <span class="hero__line">Jij komt</span>
           <span class="hero__line hero__line--indent">
-            <mark class="hero__mark">altijd</mark>
-            <em class="hero__accent">als eerste</em>
+            altijd
+            <mark class="hero__mark--yellow"><em class="hero__accent">als eerste</em></mark>
           </span>
           <span class="hero__line">Je bent niet</span>
-          <span class="hero__line hero__line--indent">de <em class="hero__accent">enige</em></span>
+          <span class="hero__line hero__line--indent">de <mark class="hero__mark--yellow"><em class="hero__accent">enige</em></mark></span>
         </h1>
 
         <p class="hero__lead">
@@ -400,5 +400,11 @@
   </footer>
 
   <script type="module" src="js/main.js"></script>
+  <script>
+    document.querySelector('.deco--lamp').addEventListener('click', function () {
+      this.classList.toggle('is-on');
+      document.body.classList.toggle('lamp-on');
+    });
+  </script>
 </body>
 </html>
