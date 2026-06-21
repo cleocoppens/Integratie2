@@ -46,22 +46,38 @@ async function handleContactSubmit(e) {
   }
 }
 
+function onContactInput(event) {
+  const inp    = event.currentTarget;
+  clearError(inp);
+  const form   = inp.closest(".contact-form");
+  const btn    = form.querySelector("[type='submit']");
+  const inputs = Array.from(form.querySelectorAll(".field__input"));
+  checkContactReady(btn, inputs);
+}
+
+function onContactBlur(event) {
+  const inp = event.currentTarget;
+  if (inp.value.trim() !== "") {
+    const err = validateInput(inp);
+    if (err) showError(inp, err); else clearError(inp);
+  }
+  const form   = inp.closest(".contact-form");
+  const btn    = form.querySelector("[type='submit']");
+  const inputs = Array.from(form.querySelectorAll(".field__input"));
+  checkContactReady(btn, inputs);
+}
+
+function addContactInputListeners(inp) {
+  inp.addEventListener("input",  onContactInput);
+  inp.addEventListener("change", onContactInput);
+  inp.addEventListener("blur",   onContactBlur);
+}
+
 function setupSubmitToggle(form) {
   const btn    = form.querySelector("[type='submit']");
   const inputs = Array.from(form.querySelectorAll(".field__input"));
   if (!btn) return;
-
-  inputs.forEach(inp => {
-    inp.addEventListener("input",  () => { clearError(inp); checkContactReady(btn, inputs); });
-    inp.addEventListener("change", () => { clearError(inp); checkContactReady(btn, inputs); });
-    inp.addEventListener("blur",   () => {
-      if (inp.value.trim() !== "") {
-        const err = validateInput(inp);
-        if (err) showError(inp, err); else clearError(inp);
-      }
-      checkContactReady(btn, inputs);
-    });
-  });
+  inputs.forEach(addContactInputListeners);
   checkContactReady(btn, inputs);
 }
 
@@ -69,18 +85,31 @@ function checkContactReady(btn, inputs) {
   btn.disabled = !inputs.every(inp => inp.value.trim() !== "");
 }
 
+function onContactRetry(event) {
+  const success = event.currentTarget.closest(".contact-success");
+  const form    = document.querySelector(".contact-form");
+  form.reset();
+  form.querySelector("[type='submit']").disabled = true;
+  form.hidden    = false;
+  if (success) success.hidden = true;
+}
+
 function showContactSuccess() {
   const success = document.querySelector(".contact-success");
   const form    = document.querySelector(".contact-form");
   if (success) success.hidden = false;
   if (form)    form.hidden    = true;
+  success.querySelector(".contact-success__retry")
+    ?.addEventListener("click", onContactRetry, { once: true });
+}
 
-  success.querySelector(".contact-success__retry")?.addEventListener("click", () => {
-    form.reset();
-    form.querySelector("[type='submit']").disabled = true;
-    form.hidden    = false;
-    success.hidden = true;
-  }, { once: true });
+function onTextareaInput(event) {
+  const textarea = event.currentTarget;
+  const form     = textarea.closest(".contact-form");
+  const span     = form.querySelector("[data-contact-char-count]");
+  const wrap     = span?.closest(".field__count");
+  const max      = parseInt(textarea.getAttribute("maxlength"), 10);
+  updateCharCount(textarea, span, wrap, max);
 }
 
 function setupCharCount(form) {
@@ -89,8 +118,7 @@ function setupCharCount(form) {
   const max  = parseInt(textarea.getAttribute("maxlength"), 10);
   const span = form.querySelector("[data-contact-char-count]");
   const wrap = span?.closest(".field__count");
-
-  textarea.addEventListener("input", () => updateCharCount(textarea, span, wrap, max));
+  textarea.addEventListener("input", onTextareaInput);
   updateCharCount(textarea, span, wrap, max);
 }
 

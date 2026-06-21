@@ -1,3 +1,13 @@
+let feedList          = null;
+let feedControls      = null;
+let feedPrev          = null;
+let feedNext          = null;
+let confessionInput   = null;
+let confessionLocInput = null;
+let confessionButton  = null;
+let confessionCounter = null;
+let confessionMaxLen  = 0;
+
 export async function initConfessions() {
   await loadFromAPI();
   initRecogniseButtons();
@@ -53,17 +63,29 @@ function refreshFeedControls(list, controls, prev, next) {
   next.setAttribute("aria-disabled", String(list.scrollTop >= overflow - 1));
 }
 
-function initFeedControls() {
-  const list     = document.querySelector("[data-feed]");
-  const controls = document.querySelector("[data-feed-controls]");
-  const prev     = document.querySelector("[data-feed-prev]");
-  const next     = document.querySelector("[data-feed-next]");
-  if (!list || !controls || !prev || !next) return;
+function onFeedPrevClick() {
+  feedList.scrollBy({ top: -feedStepSize(feedList), behavior: "smooth" });
+}
 
-  prev.addEventListener("click", () => { list.scrollBy({ top: -feedStepSize(list), behavior: "smooth" }); });
-  next.addEventListener("click", () => { list.scrollBy({ top:  feedStepSize(list), behavior: "smooth" }); });
-  list.addEventListener("scroll", () => refreshFeedControls(list, controls, prev, next));
-  refreshFeedControls(list, controls, prev, next);
+function onFeedNextClick() {
+  feedList.scrollBy({ top: feedStepSize(feedList), behavior: "smooth" });
+}
+
+function onFeedScroll() {
+  refreshFeedControls(feedList, feedControls, feedPrev, feedNext);
+}
+
+function initFeedControls() {
+  feedList     = document.querySelector("[data-feed]");
+  feedControls = document.querySelector("[data-feed-controls]");
+  feedPrev     = document.querySelector("[data-feed-prev]");
+  feedNext     = document.querySelector("[data-feed-next]");
+  if (!feedList || !feedControls || !feedPrev || !feedNext) return;
+
+  feedPrev.addEventListener("click",  onFeedPrevClick);
+  feedNext.addEventListener("click",  onFeedNextClick);
+  feedList.addEventListener("scroll", onFeedScroll);
+  refreshFeedControls(feedList, feedControls, feedPrev, feedNext);
 }
 
 function initRecogniseButtons() {
@@ -110,24 +132,28 @@ function checkConfessionReady(button, input, locInput, counter, MAX) {
   button.disabled = input.value.trim() === "" || locInput.value === "";
 }
 
+function onConfessionInputChange() {
+  checkConfessionReady(confessionButton, confessionInput, confessionLocInput, confessionCounter, confessionMaxLen);
+}
+
+function onCityArrowClick() {
+  try { confessionLocInput.showPicker(); } catch { confessionLocInput.focus(); }
+}
+
 function initConfessionForm() {
-  const form     = document.querySelector(".confession-form");
+  const form = document.querySelector(".confession-form");
   if (!form) return;
 
-  const input    = form.querySelector(".confession-form__input");
-  const locInput = form.querySelector(".confession-form__location");
-  const button   = form.querySelector("[type='submit']");
-  const arrow    = form.querySelector(".confession-form__city-arrow");
-  const counter  = form.querySelector("[data-confession-count]");
-  const MAX      = Number(input.maxLength) || 100;
+  confessionInput    = form.querySelector(".confession-form__input");
+  confessionLocInput = form.querySelector(".confession-form__location");
+  confessionButton   = form.querySelector("[type='submit']");
+  confessionCounter  = form.querySelector("[data-confession-count]");
+  confessionMaxLen   = Number(confessionInput.maxLength) || 100;
 
-  arrow?.addEventListener("click", () => {
-    try { locInput.showPicker(); } catch { locInput.focus(); }
-  });
-
-  input.addEventListener("input",   () => checkConfessionReady(button, input, locInput, counter, MAX));
-  locInput.addEventListener("change", () => checkConfessionReady(button, input, locInput, counter, MAX));
-
+  const arrow = form.querySelector(".confession-form__city-arrow");
+  arrow?.addEventListener("click", onCityArrowClick);
+  confessionInput.addEventListener("input",     onConfessionInputChange);
+  confessionLocInput.addEventListener("change",  onConfessionInputChange);
   form.addEventListener("submit", handleConfessionSubmit);
 }
 
